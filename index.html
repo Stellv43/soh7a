@@ -1,1097 +1,1815 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f9fd">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0c">
-<link rel="manifest" href="manifest.json">
-<title>محفظتي الاحترافية</title>
-<style>
-:root {
-    --safe-top: env(safe-area-inset-top, 54px);
-    --safe-bottom: env(safe-area-inset-bottom, 34px);
-    --bg: #f4f5f9; 
-    --card-bg: #ffffff; 
-    --text: #111318; 
-    --subtext: #717680;
-    --primary: #0062ff; 
-    --primary-gradient: linear-gradient(135deg, #0062ff, #00a2ff);
-    --accent-gradient: linear-gradient(135deg, #2b32b2, #1488cc);
-    --danger: #f04438; 
-    --success: #12b76a; 
-    --warning: #f79009;
-    --nav-bg: rgba(255, 255, 255, 0.9); 
-    --border: #e2e4ed;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>محفظتي الاحترافية - مالية الصوفا</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Cairo Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #0a0a0c; 
-        --card-bg: #141519; 
-        --text: #f9f9fb; 
-        --subtext: #9aa0ac;
-        --nav-bg: rgba(20, 21, 25, 0.9); 
-        --border: #262831;
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            },
+            accent: {
+              50: '#f0f9ff',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
     }
-}
+  </script>
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; }
-body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; overscroll-behavior: none; }
-h1, h2, h3, p { margin: 0; }
-button, input, select { font: inherit; outline: none; border: none; }
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.7);
+    }
 
-#app-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-.page { display: none; flex: 1; overflow-y: auto; padding: calc(var(--safe-top) + 12px) 18px calc(var(--safe-bottom) + 100px) 18px; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-.page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    /* Glassmorphism Effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-.card { background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 16px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
-.flex-between { display: flex; justify-content: space-between; align-items: center; }
-.flex-col { display: flex; flex-direction: column; gap: 12px; }
-.text-lg { font-size: 22px; font-weight: 700; }
-.text-xl { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; }
-.text-sm { font-size: 13px; color: var(--subtext); }
-.text-danger { color: var(--danger); }
-.text-success { color: var(--success); }
-.text-primary { color: var(--primary); }
-.text-warning { color: var(--warning); }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .dark .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
 
-.btn { background: var(--primary); color: #fff; padding: 15px; border-radius: 16px; font-weight: 600; width: 100%; text-align: center; cursor: pointer; transition: transform 0.1s, opacity 0.2s; box-shadow: 0 6px 20px rgba(0, 98, 255, 0.3); font-size: 15px; }
-.btn:active { transform: scale(0.98); opacity: 0.85; }
-.btn-danger { background: var(--danger); box-shadow: 0 6px 20px rgba(240, 68, 56, 0.3); }
-.btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); box-shadow: none; }
+    /* Smooth Transitions */
+    .view-tab {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .view-tab.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-input, select { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 4px; font-size: 15px; transition: border-color 0.2s; }
-input:focus { border-color: var(--primary); }
-
-/* شريط التنقل السفلي المطور */
-.bottom-nav { position: absolute; bottom: 12px; left: 16px; right: 16px; background: var(--nav-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 28px; display: flex; justify-content: space-around; align-items: center; padding: 8px 12px; z-index: 100; box-shadow: var(--shadow); }
-.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--subtext); font-size: 11px; gap: 4px; width: 60px; cursor: pointer; font-weight: 600; transition: color 0.2s; }
-.nav-item.active { color: var(--primary); }
-.nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-.fab-btn { background: var(--primary-gradient); width: 50px; height: 50px; border-radius: 25px; display: flex; justify-content: center; align-items: center; color: #fff; box-shadow: 0 8px 20px rgba(0, 98, 255, 0.4); transition: transform 0.2s; }
-.fab-btn:active { transform: scale(0.92); }
-.fab-btn svg { width: 24px; height: 24px; fill: #fff; }
-
-/* النوافذ المنبثقة والسفلية */
-.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(6px); }
-.modal-overlay.show { display: block; opacity: 1; }
-.bottom-sheet { position: fixed; bottom: -100%; left: 0; right: 0; background: var(--card-bg); border-radius: 32px 32px 0 0; padding: 24px 20px calc(var(--safe-bottom) + 24px) 20px; z-index: 1000; transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); max-height: 90dvh; overflow-y: auto; box-shadow: 0 -15px 50px rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
-.bottom-sheet.show { bottom: 0; }
-.sheet-drag { width: 40px; height: 4px; background: var(--subtext); opacity: 0.4; border-radius: 2px; margin: 0 auto 20px auto; }
-
-.list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.list-item:last-child { border-bottom: none; }
-.item-icon { width: 46px; height: 46px; border-radius: 14px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid var(--border); }
-
-/* شبكة الفئات */
-.category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
-.cat-tile { background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.cat-tile.selected { border-color: var(--primary); background: rgba(0, 98, 255, 0.08); color: var(--primary); }
-.cat-tile span.icon { font-size: 22px; }
-
-.chart-container { width: 100%; height: 160px; display: flex; align-items: flex-end; gap: 8px; padding-top: 15px; }
-.chart-bar { flex: 1; background: var(--primary); border-radius: 6px 6px 0 0; transition: height 0.5s; min-height: 6px; opacity: 0.85; }
-
-#setup-screen, #lock-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; padding: var(--safe-top) 24px var(--safe-bottom) 24px; justify-content: center; }
-.hidden { display: none !important; }
-.pin-dots { display: flex; gap: 16px; justify-content: center; margin: 24px 0; }
-.pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--primary); transition: background 0.2s, transform 0.2s; }
-.pin-dot.filled { background: var(--primary); transform: scale(1.1); }
-.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 300px; margin: 0 auto; }
-.key-btn { font-size: 24px; font-weight: 600; background: var(--card-bg); border-radius: 50%; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; box-shadow: var(--card-shadow); cursor: pointer; border: 1px solid var(--border); }
-
-.segment-control { display: flex; background: var(--bg); border-radius: 14px; padding: 4px; margin-bottom: 16px; border: 1px solid var(--border); }
-.segment { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--subtext); transition: all 0.2s; }
-.segment.active { background: var(--card-bg); font-weight: 700; color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-
-.analytics-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
-.mini-stat-card { background: var(--bg); padding: 14px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
-.search-box-wrapper { position: relative; margin-bottom: 14px; }
-.search-box-wrapper input { padding-right: 44px; margin-bottom: 0; }
-.search-icon-pos { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--subtext); font-size: 16px; }
-
-/* ترويسات الصفحات المحدثة */
-.page-header-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-</style>
+    /* Floating Action Pulse */
+    @keyframes subtle-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .fab-glow {
+      box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.4);
+    }
+  </style>
 </head>
-<body>
 
-<!-- شاشة الإعداد الأولية -->
-<div id="setup-screen" class="hidden">
-    <div style="text-align: center; margin-bottom: 28px;">
-        <div style="width: 70px; height: 70px; background: var(--primary-gradient); border-radius: 20px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; box-shadow: 0 10px 25px rgba(0,98,255,0.4);">💳</div>
-        <h1 style="font-size: 28px; margin-bottom: 8px; font-weight: 800;">مرحباً بك في محفظتي</h1>
-        <p class="text-sm">إدارة مالية ذكية ومتقدمة، بخصوصية كاملة على جهازك.</p>
-    </div>
-    <div class="card flex-col">
-        <label class="text-sm">الرصيد النقدي الحالي</label>
-        <input type="number" id="setup-balance" placeholder="0.00" inputmode="decimal">
-        <label class="text-sm">العملة المفضلة</label>
-        <input type="text" id="setup-currency" value="د.ل" placeholder="مثال: د.ل، $، €">
-        <button class="btn" onclick="App.finishSetup()" style="margin-top: 8px;">ابدأ الاستخدام الآن</button>
-    </div>
-</div>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col justify-between pb-24 antialiased selection:bg-brand-500 selection:text-white">
 
-<!-- شاشة قفل الحماية (PIN) -->
-<div id="lock-screen" class="hidden">
-    <div style="text-align: center; margin-bottom: 10px;">
-        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 6px;">أدخل رمز حماية المحفظة</h2>
-        <p class="text-sm">التطبيق محمي بكلمة مرور خاصة بك</p>
-    </div>
-    <div class="pin-dots" id="pin-indicator">
-        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-    </div>
-    <div class="keypad" id="pin-keypad"></div>
-</div>
+  <!-- Floating Toast Notification -->
+  <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-11/12 max-w-md"></div>
 
-<div id="app-container" class="hidden">
+  <!-- PIN Code Lock Overlay -->
+  <div id="pin-lock-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-50 hidden flex-col items-center justify-center p-6 text-white text-center">
+    <div class="w-16 h-16 rounded-3xl bg-brand-500/20 text-brand-400 flex items-center justify-center mb-4 border border-brand-500/30">
+      <div id="lock-icon-container"></div>
+    </div>
+    <h2 class="text-2xl font-bold mb-1">محفظتي الاحترافية</h2>
+    <p class="text-slate-400 text-sm mb-6">أدخل رمز PIN المكون من 4 أرقام للمتابعة</p>
     
-    <!-- 1. الرئيسية -->
-    <div id="page-dashboard" class="page active">
-        <div class="page-header-title">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700;">مح</div>
-                <div>
-                    <p class="text-sm">مرحباً بك،</p>
-                    <h3 style="font-size: 16px; font-weight: 700;">محفظتك الشخصية</h3>
-                </div>
-            </div>
-            <div class="item-icon" style="width:40px; height:40px; cursor:pointer;" onclick="App.nav('settings')">⚙️</div>
-        </div>
-
-        <div class="card" style="background: var(--primary-gradient); color: #fff; border: none; box-shadow: 0 14px 40px rgba(0,98,255,0.35); position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -30px; left: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; pointer-events: none;"></div>
-            <div class="flex-between">
-                <p style="opacity: 0.9; font-size: 13px; font-weight: 600;">إجمالي الصافي والسيولة</p>
-                <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">محدث فوري</span>
-            </div>
-            <h1 class="text-xl" id="dash-balance" style="margin: 10px 0 20px 0;">0.00</h1>
-            <div class="flex-between" style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 14px;">
-                <div>
-                    <p style="font-size: 11px; opacity: 0.85; font-weight: 500;">دخل هذا الشهر</p>
-                    <p style="font-weight: 700; font-size: 16px; margin-top: 2px;" id="dash-income">0</p>
-                </div>
-                <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2);"></div>
-                <div style="text-align: left;">
-                    <p style="font-size: 11px; opacity: 0.85; font-weight: 500;">مصروف هذا الشهر</p>
-                    <p style="font-weight: 700; font-size: 16px; margin-top: 2px;" id="dash-expense">0</p>
-                </div>
-            </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px;">
-            <div class="card" style="margin:0; padding:12px 6px; text-align:center; cursor:pointer;" onclick="Forms.showTransaction('expense')">
-                <div class="item-icon text-danger" style="margin: 0 auto 6px auto; width:36px; height:36px; font-size:16px;">📤</div>
-                <span style="font-size:11px; font-weight:600;">مصروف</span>
-            </div>
-            <div class="card" style="margin:0; padding:12px 6px; text-align:center; cursor:pointer;" onclick="Forms.showTransaction('income')">
-                <div class="item-icon text-success" style="margin: 0 auto 6px auto; width:36px; height:36px; font-size:16px;">📥</div>
-                <span style="font-size:11px; font-weight:600;">دخل</span>
-            </div>
-            <div class="card" style="margin:0; padding:12px 6px; text-align:center; cursor:pointer;" onclick="App.nav('debts')">
-                <div class="item-icon text-primary" style="margin: 0 auto 6px auto; width:36px; height:36px; font-size:16px;">🤝</div>
-                <span style="font-size:11px; font-weight:600;">الديون</span>
-            </div>
-            <div class="card" style="margin:0; padding:12px 6px; text-align:center; cursor:pointer;" onclick="App.nav('analytics')">
-                <div class="item-icon text-warning" style="margin: 0 auto 6px auto; width:36px; height:36px; font-size:16px;">📊</div>
-                <span style="font-size:11px; font-weight:600;">التحليلات</span>
-            </div>
-        </div>
-
-        <div class="flex-between" style="gap:12px; margin-bottom: 16px;">
-            <div class="card" style="flex:1; margin:0; cursor:pointer;" onclick="App.nav('debts')">
-                <div class="flex-between"><p class="text-sm">ديون لك</p><span>↗️</span></div>
-                <h3 class="text-success" id="dash-owed-to-me" style="margin-top: 8px; font-size: 18px;">0.00</h3>
-            </div>
-            <div class="card" style="flex:1; margin:0; cursor:pointer;" onclick="App.nav('debts')">
-                <div class="flex-between"><p class="text-sm">ديون عليك</p><span>↙️️</span></div>
-                <h3 class="text-danger" id="dash-owed-by-me" style="margin-top: 8px; font-size: 18px;">0.00</h3>
-            </div>
-        </div>
-
-        <div class="card" id="dash-budget-card">
-            <div class="flex-between"><p class="text-sm" style="font-weight: 700;">استهلاك الميزانية الشهرية</p><span id="dash-budget-pct" style="font-weight: 700;">0%</span></div>
-            <div style="height: 10px; background: var(--bg); border-radius: 5px; margin-top: 10px; overflow: hidden; border: 1px solid var(--border);">
-                <div id="dash-budget-bar" style="height: 100%; width: 0%; background: var(--success); transition: width 0.4s;"></div>
-            </div>
-        </div>
-
-        <div class="flex-between" style="margin-bottom: 10px;">
-            <h3 style="font-size: 17px; font-weight: 700;">العمليات الأخيرة</h3>
-            <span class="text-primary text-sm" style="cursor:pointer; font-weight: 600;" onclick="App.nav('records')">عرض الكل</span>
-        </div>
-        <div class="card flex-col" id="dash-recent-txs"></div>
+    <!-- PIN Display Dots -->
+    <div id="pin-dots" class="flex gap-4 mb-8">
+      <div class="w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-200"></div>
+      <div class="w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-200"></div>
+      <div class="w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-200"></div>
+      <div class="w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-200"></div>
     </div>
 
-    <!-- 2. السجل المالي المطور والاحترافي -->
-    <div id="page-records" class="page">
-        <div class="page-header-title">
-            <h2 style="font-size: 20px; font-weight: 700;">السجل المالي الشامل</h2>
-            <div style="display: flex; gap: 8px;">
-                <span class="text-primary text-sm" style="cursor:pointer; font-weight:700; background: rgba(0,98,255,0.1); padding: 6px 12px; border-radius: 12px;" onclick="AdvancedRecords.exportCSV()">تصدير CSV 📊</span>
-            </div>
-        </div>
-
-        <div class="search-box-wrapper">
-            <span class="search-icon-pos">🔍</span>
-            <input type="text" id="rec-search-input" placeholder="ابحث بالاسم، الفئة، أو الملاحظة..." oninput="AdvancedRecords.filterData()">
-        </div>
-
-        <div class="segment-control" id="rec-time-filter">
-            <div class="segment active" onclick="AdvancedRecords.setTimeFilter('all', this)">الكل</div>
-            <div class="segment" onclick="AdvancedRecords.setTimeFilter('month', this)">هذا الشهر</div>
-            <div class="segment" onclick="AdvancedRecords.setTimeFilter('week', this)">آخر 7 أيام</div>
-            <div class="segment" onclick="AdvancedRecords.setTimeFilter('today', this)">اليوم</div>
-        </div>
-
-        <div class="segment-control" id="rec-type-filter" style="margin-bottom: 14px;">
-            <div class="segment active" onclick="AdvancedRecords.setTypeFilter('all', this)">الكل</div>
-            <div class="segment" onclick="AdvancedRecords.setTypeFilter('income', this)">الدخل</div>
-            <div class="segment" onclick="AdvancedRecords.setTypeFilter('expense', this)">المصاريف</div>
-        </div>
-
-        <div class="card" style="padding: 16px; margin-bottom: 16px; background: var(--card-bg);">
-            <div class="analytics-card-grid" style="margin-bottom: 10px;">
-                <div class="mini-stat-card">
-                    <span class="text-sm">إجمالي الدخل المفلتر</span>
-                    <h4 id="rec-stat-income" class="text-success" style="margin-top: 4px; font-size: 16px;">0.00</h4>
-                </div>
-                <div class="mini-stat-card">
-                    <span class="text-sm">إجمالي المصاريف المفلترة</span>
-                    <h4 id="rec-stat-expense" class="text-danger" style="margin-top: 4px; font-size: 16px;">0.00</h4>
-                </div>
-            </div>
-            <div class="flex-between" style="border-top: 1px solid var(--border); padding-top: 10px; font-size: 13px;">
-                <span>الصافي للفترة: <b id="rec-stat-net">0.00</b></span>
-                <span class="text-subtext" id="rec-stat-count">0 عمليات</span>
-            </div>
-        </div>
-
-        <div class="card flex-col" id="records-list"></div>
+    <!-- Numeric Keypad -->
+    <div class="grid grid-cols-3 gap-4 w-full max-w-xs">
+      <button onclick="handlePinInput('1')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">1</button>
+      <button onclick="handlePinInput('2')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">2</button>
+      <button onclick="handlePinInput('3')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">3</button>
+      <button onclick="handlePinInput('4')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">4</button>
+      <button onclick="handlePinInput('5')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">5</button>
+      <button onclick="handlePinInput('6')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">6</button>
+      <button onclick="handlePinInput('7')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">7</button>
+      <button onclick="handlePinInput('8')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">8</button>
+      <button onclick="handlePinInput('9')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">9</button>
+      <button onclick="handlePinClear()" class="h-14 rounded-2xl bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 active:scale-95 text-sm font-bold transition">مسح</button>
+      <button onclick="handlePinInput('0')" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xl font-bold transition">0</button>
+      <button onclick="handlePinDelete()" class="h-14 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-sm font-bold transition flex items-center justify-center" id="pin-backspace-btn"></button>
     </div>
-    
-    <!-- 3. الأقساط والديون والالتزامات المطورة -->
-    <div id="page-debts" class="page">
-        <div class="page-header-title">
-            <h2 style="font-size: 20px; font-weight: 700;">الديون، الأقساط والالتزامات</h2>
-            <div class="item-icon" style="width:38px; height:38px; font-size:16px; cursor:pointer;" onclick="Forms.showAddActionSheet()">➕</div>
+  </div>
+
+  <!-- Application Main Header -->
+  <header class="sticky top-0 z-30 glass-nav border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-brand-400 text-white flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <div id="app-logo-icon"></div>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base md:text-lg leading-tight text-slate-900 dark:text-white flex items-center gap-2">
+            مالية الصوفا
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-500/10 dark:bg-brand-400/20 text-brand-600 dark:text-brand-400 px-2 py-0.5 rounded-full border border-brand-500/20">Pro</span>
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">محفظتك المالية الشخصية الذكية</p>
+        </div>
+      </div>
+
+      <!-- Header Action Quick Icons -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleLockScreen()" class="p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition active:scale-95" title="قفل التطبيق" id="header-lock-btn"></button>
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition active:scale-95" title="المظهر" id="header-theme-btn"></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Main Content Container -->
+  <main class="max-w-4xl mx-auto w-full px-4 pt-4 flex-1">
+
+    <!-- PAGE 1: HOME (الرئيسية) -->
+    <section id="view-home" class="view-tab active space-y-5">
+      
+      <!-- Total Liquidity Hero Card -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 text-white p-6 shadow-2xl border border-slate-800">
+        <div class="absolute -top-10 -left-10 w-40 h-40 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-accent-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold tracking-wide text-slate-400 flex items-center gap-1.5">
+            <span id="hero-wallet-icon"></span> إجمالي السيولة المتاحة
+          </span>
+          <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold">مُحدث أونلاين محلياً</span>
         </div>
 
-        <div class="segment-control" style="margin-top: 4px;">
-            <div class="segment active" onclick="App.renderDebts('owed_to_me', this)">ديون لي</div>
-            <div class="segment" onclick="App.renderDebts('owed_by_me', this)">ديون عليّ</div>
-            <div class="segment" onclick="App.renderDebts('installments', this)">الأقساط</div>
-            <div class="segment" onclick="App.renderDebts('obligations', this)">التزامات</div>
+        <div class="flex items-baseline gap-2 mb-6">
+          <span id="home-total-balance" class="text-3xl md:text-4xl font-black tracking-tight text-white">0.00</span>
+          <span id="home-currency-symbol" class="text-lg font-bold text-slate-400">ر.س</span>
         </div>
 
-        <!-- لوحة ملخص سريعة للقسم الحالي -->
-        <div class="card" style="padding: 14px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg);">
+        <!-- Income vs Expense Grid -->
+        <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-700/60">
+          <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <span id="hero-income-icon"></span>
+            </div>
             <div>
-                <p class="text-sm" id="debts-summary-title">إجمالي المبالغ غير السارية</p>
-                <h3 id="debts-summary-amount" style="font-size: 18px; margin-top: 2px;">0.00</h3>
+              <p class="text-[11px] text-slate-400 font-medium">مجموع الدخل</p>
+              <p id="home-total-income" class="text-sm md:text-base font-bold text-emerald-400">+0.00</p>
             </div>
-            <div class="item-icon" style="background: rgba(0,98,255,0.08); color: var(--primary);">💼</div>
-        </div>
+          </div>
 
-        <div id="debts-list"></div>
-    </div>
-
-    <!-- 4. التحليلات المتقدمة -->
-    <div id="page-analytics" class="page">
-        <div class="page-header-title">
-            <h2 style="font-size: 20px; font-weight: 700;">التحليلات والتقارير</h2>
-        </div>
-        <div class="card" style="margin-top:4px;">
-            <p class="text-sm" style="font-weight: 700;">تحليل المصاريف (آخر 7 أيام)</p>
-            <div class="chart-container" id="chart-expenses"></div>
-        </div>
-        <div class="card">
-            <p class="text-sm" style="font-weight: 700;">رؤى ونصائح ذكية</p>
-            <p id="smart-analysis" style="margin-top: 10px; font-weight: 600; line-height: 1.6; font-size: 14px;"></p>
-        </div>
-    </div>
-
-    <!-- 5. صفحة المزيد والإعدادات المطورة بالكامل -->
-    <div id="page-settings" class="page">
-        <div class="page-header-title">
-            <h2 style="font-size: 20px; font-weight: 700;">المزيد والإعدادات</h2>
-        </div>
-
-        <!-- بطاقة الملف الشخصي المختصرة -->
-        <div class="card" style="display: flex; align-items: center; gap: 14px; background: var(--primary-gradient); color: #fff; border:none;">
-            <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;">🛡️</div>
+          <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+              <span id="hero-expense-icon"></span>
+            </div>
             <div>
-                <h3 style="font-size: 17px; font-weight: 700;">محفظتك محمية وآمنة</h3>
-                <p style="font-size: 12px; opacity: 0.85; margin-top: 2px;">البيانات مخزنة محلياً بالكامل على جهازك بنسبة 100%.</p>
+              <p class="text-[11px] text-slate-400 font-medium">مجموع المصاريف</p>
+              <p id="home-total-expense" class="text-sm md:text-base font-bold text-rose-400">-0.00</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Debts & Budget Cards Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Monthly Budget Status Card -->
+        <div class="glass-card rounded-3xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="p-2 rounded-xl bg-indigo-500/10 text-indigo-500" id="card-budget-icon"></div>
+              <div>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">استهلاك الميزانية الشهرية</h3>
+                <p id="budget-subtitle" class="text-xs text-slate-500 dark:text-slate-400">الحد الأقصى: 0 ر.س</p>
+              </div>
+            </div>
+            <span id="budget-percentage" class="text-xs font-extrabold px-2.5 py-1 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">0%</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+            <div id="budget-progress-bar" class="bg-indigo-500 h-full rounded-full transition-all duration-500 w-0"></div>
+          </div>
+          <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 pt-1">
+            <span>المُنفق: <strong id="budget-spent-text" class="text-slate-800 dark:text-slate-200">0</strong></span>
+            <span>المتبقي: <strong id="budget-remaining-text" class="text-slate-800 dark:text-slate-200">0</strong></span>
+          </div>
         </div>
 
-        <p class="text-sm" style="font-weight: 700; margin: 16px 0 8px 4px;">النظام والتحكم المالي</p>
-        <div class="card flex-col" style="padding: 4px 16px;">
-            <div class="list-item" onclick="Forms.showBudgetSetup()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">🎯</span><b>تحديد الميزانية الشهرية</b></div>
-                <span class="text-sm">></span>
+        <!-- Debts & Commitments Overview Card -->
+        <div class="glass-card rounded-3xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="p-2 rounded-xl bg-amber-500/10 text-amber-500" id="card-debts-icon"></div>
+              <div>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">صافي الديون والالتزامات</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">ملخص الالتزامات المستحقة</p>
+              </div>
             </div>
-            <div class="list-item" onclick="Forms.showSettingsUpdate()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">💱</span><b>تعديل العملة والرصيد الافتتاحي</b></div>
-                <span class="text-sm">></span>
+            <button onclick="switchTab('debts')" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline">التفاصيل</button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div class="p-2.5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/10">
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">ديون لك (تطالب بها)</p>
+              <p id="home-debts-to-me" class="font-extrabold text-sm text-emerald-600 dark:text-emerald-400">0 ر.س</p>
             </div>
-            <div class="list-item" onclick="App.setPin()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">🔐</span><b>رمز حماية التطبيق (PIN)</b></div>
-                <span class="text-sm">></span>
+            <div class="p-2.5 rounded-2xl bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10">
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">ديون عليك (مطلوبة منك)</p>
+              <p id="home-debts-i-owe" class="font-extrabold text-sm text-rose-600 dark:text-rose-400">0 ر.س</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Category Quick Grid -->
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-3">
+        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center justify-between">
+          <span>فئات المصاريف والدخل</span>
+          <span class="text-xs font-normal text-slate-500">اختر فئة للإضافة السريعة</span>
+        </h3>
+
+        <div class="grid grid-cols-5 gap-2.5" id="categories-grid-container">
+          <!-- Rendered dynamically by Javascript with color-coded embedded SVG icons -->
+        </div>
+      </div>
+
+      <!-- Recent Transactions Section -->
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">آخر العمليات المسجلة</h3>
+          <button onclick="switchTab('history')" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline">عرض الكل</button>
         </div>
 
-        <p class="text-sm" style="font-weight: 700; margin: 16px 0 8px 4px;">النسخ الاحتياطي والأمان</p>
-        <div class="card flex-col" style="padding: 4px 16px;">
-            <div class="list-item" onclick="DB.exportBackup()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">📤</span><b>تصدير نسخة احتياطية (JSON)</b></div>
-                <span class="text-sm">></span>
-            </div>
-            <div class="list-item" onclick="document.getElementById('import-file').click()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">📥</span><b>استعادة نسخة احتياطية</b></div>
-                <span class="text-sm">></span>
-            </div>
-            <input type="file" id="import-file" class="hidden" accept=".json" onchange="DB.importBackup(event)">
-            <div class="list-item text-danger" onclick="DB.factoryReset()">
-                <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px;">⚠️</span><b>إعادة ضبط المصنع وحذف البيانات</b></div>
-                <span class="text-sm">></span>
-            </div>
+        <div id="home-recent-list" class="space-y-2.5">
+          <!-- Dynamic Recent List Placeholder -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: HISTORY (السجل المالي) -->
+    <section id="view-history" class="view-tab space-y-4">
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-4">
+        
+        <!-- Header & Search Box -->
+        <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          <div class="relative flex-1">
+            <span class="absolute inset-y-0 right-3 flex items-center text-slate-400 pointer-events-none" id="search-input-icon"></span>
+            <input type="text" id="history-search-input" oninput="filterHistory()" placeholder="ابحث عن عملية بالوصف أو الفئة..." class="w-full pr-10 pl-4 py-2.5 text-sm rounded-2xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-brand-500 dark:text-white outline-none">
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="exportCSV()" class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-md transition">
+              <span id="export-csv-icon"></span> تصدير CSV (إكسل)
+            </button>
+          </div>
         </div>
 
-        <div style="text-align: center; margin: 20px 0;">
-            <p class="text-sm" style="font-weight: 600;">تطبيق محفظتي — الإصدار الاحترافي 2.5</p>
-            <p class="text-sm" style="opacity: 0.6; margin-top: 4px;">جميع الحقوق محفوظة © 2026</p>
+        <!-- Filter Chips Bar -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs">
+          <button onclick="setHistoryFilter('all')" id="filter-chip-all" class="px-3.5 py-2 rounded-xl font-bold bg-brand-500 text-white shrink-0 shadow-sm transition">الكل</button>
+          <button onclick="setHistoryFilter('today')" id="filter-chip-today" class="px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition">اليوم</button>
+          <button onclick="setHistoryFilter('week')" id="filter-chip-week" class="px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition">آخر 7 أيام</button>
+          <button onclick="setHistoryFilter('month')" id="filter-chip-month" class="px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition">هذا الشهر</button>
+          <button onclick="setHistoryFilter('income')" id="filter-chip-income" class="px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition">الدخل فقط</button>
+          <button onclick="setHistoryFilter('expense')" id="filter-chip-expense" class="px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition">المصاريف فقط</button>
         </div>
+
+        <!-- Summary Bar of Filtered Results -->
+        <div class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/60 flex items-center justify-between text-xs font-bold text-slate-600 dark:text-slate-300">
+          <span>عدد العمليات: <span id="filtered-count" class="text-slate-900 dark:text-white">0</span></span>
+          <span>صافي المجموع: <span id="filtered-total" class="text-brand-600 dark:text-brand-400">0.00</span></span>
+        </div>
+
+        <!-- Full Transactions List -->
+        <div id="history-full-list" class="space-y-2.5 min-h-[300px]">
+          <!-- Dynamic Content -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 3: DEBTS & COMMITMENTS (الديون والالتزامات) -->
+    <section id="view-debts" class="view-tab space-y-4">
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">إدارة الديون والأقساط</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">متابعة المستحقات والأقساط والالتزامات</p>
+          </div>
+          <button onclick="openAddDebtModal()" class="px-3.5 py-2 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition">
+            <span id="add-debt-btn-icon"></span> إضافة التزام
+          </button>
+        </div>
+
+        <!-- 4 Sub-Tabs -->
+        <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-200/70 dark:bg-slate-800/70 rounded-2xl text-xs font-bold">
+          <button onclick="switchDebtSubTab('to_me')" id="subtab-debts-to-me" class="py-2.5 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm transition">ديون لي</button>
+          <button onclick="switchDebtSubTab('i_owe')" id="subtab-debts-i-owe" class="py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">ديون عليّ</button>
+          <button onclick="switchDebtSubTab('installments')" id="subtab-debts-installments" class="py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">أقساط</button>
+          <button onclick="switchDebtSubTab('recurring')" id="subtab-debts-recurring" class="py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">التزامات</button>
+        </div>
+
+        <!-- Debts List Display Container -->
+        <div id="debts-items-container" class="space-y-3 min-h-[250px]">
+          <!-- Dynamic Content -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 4: ANALYTICS (التحليلات) -->
+    <section id="view-analytics" class="view-tab space-y-4">
+      <!-- Weekly Spending Chart -->
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span id="analytics-bar-icon" class="text-brand-500"></span> مصاريف آخر 7 أيام
+          </h3>
+          <span class="text-xs text-slate-500">تحليل المبيعات والمصاريف</span>
+        </div>
+
+        <div class="relative h-48 w-full">
+          <canvas id="weekly-chart-canvas" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Category Expense Distribution -->
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-4">
+        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <span id="analytics-pie-icon" class="text-accent-500"></span> توزيع الإنفاق حسب الفئة
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div class="relative h-44 w-full flex items-center justify-center">
+            <canvas id="category-chart-canvas" class="max-h-full"></canvas>
+          </div>
+          <div id="category-chart-legend" class="space-y-2 text-xs">
+            <!-- Dynamic Legend items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Financial Tips & Insights Card -->
+      <div class="glass-card rounded-3xl p-5 shadow-sm border-r-4 border-r-brand-500 space-y-2">
+        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <span id="analytics-info-icon" class="text-brand-500"></span> نصائح وتحليلات ذكية
+        </h3>
+        <p id="smart-insight-text" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          جاري تحليل بياناتك المالية بذكاء لتقديم التوصيات المناسبة...
+        </p>
+      </div>
+    </section>
+
+    <!-- PAGE 5: SETTINGS & SECURITY (الإعدادات والأمان) -->
+    <section id="view-settings" class="view-tab space-y-4">
+      <div class="glass-card rounded-3xl p-5 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white pb-2 border-b border-slate-200 dark:border-slate-800">إعدادات الحساب والأمان</h2>
+
+        <!-- Budget & Currency Configuration Form -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">الإعدادات المالية</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">رمز العملة الرئيسي</label>
+              <select id="setting-currency" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+                <option value="ر.س">ر.س (ريال سعودي)</option>
+                <option value="د.إ">د.إ (درهم إماراتي)</option>
+                <option value="ج.م">ج.م (جنيه مصري)</option>
+                <option value="د.ل">د.ل (دينار ليبي)</option>
+                <option value="د.ع">د.ع (دينار عراقي)</option>
+                <option value="د.ج">د.ج (دينار جزائري)</option>
+                <option value="$">$ (دولار أمريكي)</option>
+                <option value="€">€ (يورو)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">سقف الميزانية الشهرية</label>
+              <input type="number" id="setting-budget" placeholder="مثال: 5000" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">الرصيد الافتتاحي الأولي</label>
+            <input type="number" id="setting-initial-balance" placeholder="مثال: 1000" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+          </div>
+
+          <button onclick="saveFinancialSettings()" class="w-full py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs shadow-md transition">حفظ التغييرات المالية</button>
+        </div>
+
+        <!-- Security & PIN Lock Settings -->
+        <div class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">الأمان والحماية</h3>
+
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/60">
+            <div class="flex items-center gap-3">
+              <div class="p-2.5 rounded-xl bg-brand-500/10 text-brand-500" id="setting-shield-icon"></div>
+              <div>
+                <p class="font-bold text-xs text-slate-900 dark:text-white">رمز الحماية PIN (4 أرقام)</p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400" id="pin-status-text">غير مفعل حالياً</p>
+              </div>
+            </div>
+
+            <button onclick="openSetPinModal()" id="setting-pin-toggle-btn" class="px-3.5 py-2 rounded-xl bg-brand-500/10 text-brand-600 dark:text-brand-400 font-bold text-xs hover:bg-brand-500/20 transition">تفعيل / تغيير</button>
+          </div>
+        </div>
+
+        <!-- Backup & Factory Reset Actions -->
+        <div class="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">النسخ الاحتياطي والإعادة</h3>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="exportBackupJSON()" class="flex items-center justify-center gap-2 py-3 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition">
+              <span id="backup-export-icon"></span> تصدير نسخة JSON
+            </button>
+            <label class="flex items-center justify-center gap-2 py-3 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs cursor-pointer transition">
+              <span id="backup-import-icon"></span> استعادة نسخة
+              <input type="file" id="import-file-input" onchange="importBackupJSON(event)" accept=".json" class="hidden">
+            </label>
+          </div>
+
+          <button onclick="openResetModal()" class="w-full py-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold text-xs flex items-center justify-center gap-2 transition">
+            <span id="factory-reset-icon"></span> إعادة ضبط المصنع (مسح كامل البيانات)
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Glassmorphism Navigation Bar -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 glass-nav border-t border-slate-200/60 dark:border-slate-800/60 px-3 py-2">
+    <div class="max-w-md mx-auto flex items-center justify-around relative">
+      
+      <!-- Nav Item: Home -->
+      <button onclick="switchTab('home')" id="nav-btn-home" class="flex flex-col items-center gap-1 text-brand-600 dark:text-brand-400 font-bold text-[10px] transition active:scale-90">
+        <span id="nav-icon-home"></span>
+        <span>الرئيسية</span>
+      </button>
+
+      <!-- Nav Item: History -->
+      <button onclick="switchTab('history')" id="nav-btn-history" class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-600 font-medium text-[10px] transition active:scale-90">
+        <span id="nav-icon-history"></span>
+        <span>السجل</span>
+      </button>
+
+      <!-- Central FAB Floating '+' Button -->
+      <div class="relative -top-5">
+        <button onclick="openQuickActionModal()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-600 to-brand-400 text-white flex items-center justify-center fab-glow shadow-xl active:scale-90 transition transform hover:rotate-90 duration-300">
+          <span id="fab-plus-icon"></span>
+        </button>
+      </div>
+
+      <!-- Nav Item: Debts -->
+      <button onclick="switchTab('debts')" id="nav-btn-debts" class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-600 font-medium text-[10px] transition active:scale-90">
+        <span id="nav-icon-debts"></span>
+        <span>الالتزامات</span>
+      </button>
+
+      <!-- Nav Item: Analytics -->
+      <button onclick="switchTab('analytics')" id="nav-btn-analytics" class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-600 font-medium text-[10px] transition active:scale-90">
+        <span id="nav-icon-analytics"></span>
+        <span>التحليلات</span>
+      </button>
+
+      <!-- Nav Item: Settings -->
+      <button onclick="switchTab('settings')" id="nav-btn-settings" class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-600 font-medium text-[10px] transition active:scale-90">
+        <span id="nav-icon-settings"></span>
+        <span>الإعدادات</span>
+      </button>
+
     </div>
+  </nav>
 
-    <!-- شريط التنقل السفلي -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="App.nav('dashboard', this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>الرئيسية</div>
-        <div class="nav-item" onclick="App.nav('records', this)"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3zM5 5v14h14V5zm2 2h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/></svg>السجل</div>
-        <div class="nav-item" onclick="Forms.showAddActionSheet()">
-            <div class="fab-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
-        </div>
-        <div class="nav-item" onclick="App.nav('debts', this)"><svg viewBox="0 0 24 24"><path d="M11.5 2C6.8 2 3 5.8 3 10.5S6.8 19 11.5 19h7c1.7 0 3-1.3 3-3s-1.3-3-3-3h-1.4c1.1-1.3 1.8-3 1.8-4.8C18.9 4.3 15.6 2 11.5 2z"/></svg>الأقساط</div>
-        <div class="nav-item" onclick="App.nav('settings', this)"><svg viewBox="0 0 24 24"><path d="M19.1 13c.1-.3.1-.6.1-1s0-.7-.1-1l2.1-1.7c.2-.2.2-.4.1-.6l-2-3.5c-.1-.2-.3-.3-.5-.2l-2.5 1c-.5-.4-1.1-.8-1.7-1l-.4-2.7c0-.2-.2-.4-.4-.4h-4c-.2 0-.4.2-.4.4l-.4 2.7c-.6.2-1.2.6-1.7 1l-2.5-1c-.2-.1-.5 0-.6.2l-2 3.5c-.1.2 0 .5.2.6l2.1 1.7c-.1.3-.1.6-.1 1s0 .7.1 1l-2.1 1.7c-.2.2-.2.5-.1.6l2 3.5c.1.2.3.3.5.2l2.5-1c.5.4 1.1.8 1.7 1l.4 2.7c0 .2.2.4.4.4h4c.2 0 .4-.2.4-.4l.4-2.7c.6-.2 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.5c.1-.2 0-.5-.2-.6l-2.1-1.7zM12 15.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5 z"/></svg>المزيد</div>
+  <!-- MODAL 1: Quick Action Bottom Sheet Modal -->
+  <div id="modal-quick-action" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom duration-250">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-900 dark:text-white">إضافة إجراء جديد</h3>
+        <button onclick="closeQuickActionModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" id="quick-close-icon"></button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="closeQuickActionModal(); openAddTxModal('expense');" class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 transition active:scale-95">
+          <span id="quick-expense-icon" class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md"></span>
+          <span class="font-bold text-xs">إضافة مصروف</span>
+        </button>
+
+        <button onclick="closeQuickActionModal(); openAddTxModal('income');" class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition active:scale-95">
+          <span id="quick-income-icon" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md"></span>
+          <span class="font-bold text-xs">إضافة دخل</span>
+        </button>
+
+        <button onclick="closeQuickActionModal(); openAddDebtModal();" class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-600 dark:text-amber-400 transition active:scale-95">
+          <span id="quick-debt-icon" class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-md"></span>
+          <span class="font-bold text-xs">تسجيل دين / التزام</span>
+        </button>
+
+        <button onclick="closeQuickActionModal(); openAddDebtModal('installments');" class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 transition active:scale-95">
+          <span id="quick-installment-icon" class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center shadow-md"></span>
+          <span class="font-bold text-xs">إضافة قسط جديد</span>
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- النافذة المنبثقة السفلية -->
-<div class="modal-overlay" id="modal-overlay" onclick="Forms.closeModal()"></div>
-<div class="bottom-sheet" id="bottom-sheet">
-    <div class="sheet-drag"></div>
-    <h3 id="modal-title" style="margin-bottom: 16px; font-size: 18px; font-weight: 700;">العنوان</h3>
-    <div id="modal-body"></div>
-</div>
+  <!-- MODAL 2: Add Transaction Modal (Income/Expense) -->
+  <div id="modal-add-tx" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 id="tx-modal-title" class="font-bold text-base text-slate-900 dark:text-white">إضافة معاملة جديدة</h3>
+        <button onclick="closeAddTxModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" id="tx-close-icon"></button>
+      </div>
 
-<script>
-// --- قاعدة البيانات المحلية IndexedDB ---
-const DB_NAME = 'MahfathatyAdvancedDB';
-const DB_VERSION = 1;
-const DB = {
-    db: null,
-    init() {
-        return new Promise((resolve, reject) => {
-            const req = indexedDB.open(DB_NAME, DB_VERSION);
-            req.onupgradeneeded = e => {
-                const db = e.target.result;
-                if(!db.objectStoreNames.contains('transactions')) db.createObjectStore('transactions', {keyPath: 'id'});
-                if(!db.objectStoreNames.contains('debts')) db.createObjectStore('debts', {keyPath: 'id'});
-                if(!db.objectStoreNames.contains('installments')) db.createObjectStore('installments', {keyPath: 'id'});
-                if(!db.objectStoreNames.contains('obligations')) db.createObjectStore('obligations', {keyPath: 'id'});
-                if(!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', {keyPath: 'id'});
-            };
-            req.onsuccess = e => { this.db = e.target.result; resolve(); };
-            req.onerror = e => reject(e);
-        });
-    },
-    async get(store, id) {
-        return new Promise(res => { const r = this.db.transaction(store).objectStore(store).get(id); r.onsuccess = () => res(r.result); });
-    },
-    async getAll(store) {
-        return new Promise(res => { const r = this.db.transaction(store).objectStore(store).getAll(); r.onsuccess = () => res(r.result); });
-    },
-    async put(store, data) {
-        return new Promise(res => { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).put(data); tx.oncomplete = () => res(); });
-    },
-    async del(store, id) {
-        return new Promise(res => { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).delete(id); tx.oncomplete = () => res(); });
-    },
-    async clear(store) {
-        return new Promise(res => { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).clear(); tx.oncomplete = () => res(); });
-    },
-    async exportBackup() {
-        const stores = ['transactions', 'debts', 'installments', 'obligations', 'settings'];
-        const data = {};
-        for(let s of stores) data[s] = await this.getAll(s);
-        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `mahfathaty_backup_${Date.now()}.json`; a.click();
-    },
-    async importBackup(e) {
-        if(!e.target.files[0]) return;
-        if(!confirm('استعادة النسخة ستستبدل البيانات الحالية بالكامل. هل تريد المتابعة؟')) return;
-        const reader = new FileReader();
-        reader.onload = async ev => {
-            try {
-                const data = JSON.parse(ev.target.result);
-                for(let s of Object.keys(data)) { await this.clear(s); for(let row of data[s]) await this.put(s, row); }
-                alert('تمت الاستعادة بنجاح!'); location.reload();
-            } catch(err) { alert('ملف النسخة الاحتياطية غير صالح.'); }
+      <form id="tx-form" onsubmit="handleTxSubmit(event)" class="space-y-3">
+        <input type="hidden" id="tx-type" value="expense">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">المبلغ</label>
+          <input type="number" step="0.01" id="tx-amount" required placeholder="0.00" class="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-xl font-extrabold text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">الفئة</label>
+          <select id="tx-category" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+            <!-- Dynamic Category List -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">الوصف / بيان المعاملة</label>
+          <input type="text" id="tx-note" placeholder="مثال: شراء مستلزمات البقالة" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">التاريخ</label>
+          <input type="date" id="tx-date" required class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-sm shadow-md transition mt-2">حفظ المعاملة</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Add Debt Modal -->
+  <div id="modal-add-debt" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-900 dark:text-white">تسجيل دين / قسط جديد</h3>
+        <button onclick="closeAddDebtModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" id="debt-close-icon"></button>
+      </div>
+
+      <form id="debt-form" onsubmit="handleDebtSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">نوع الالتزام</label>
+          <select id="debt-type" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+            <option value="to_me">دين لي (شخص مدين لي بمبلغ)</option>
+            <option value="i_owe">دين عليّ (أنا مدين لشخص بمبلغ)</option>
+            <option value="installments">قسط شهري / سنوي</option>
+            <option value="recurring">التزام دوري (فواتير، إيجار، غيره)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">اسم الشخص / جهة الدين</label>
+          <input type="text" id="debt-person" required placeholder="مثال: أخي أحمد أو شركة التقسيط" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">المبلغ الإجمالي</label>
+            <input type="number" step="0.01" id="debt-total-amount" required placeholder="0.00" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">المبلغ المسدد حالياً</label>
+            <input type="number" step="0.01" id="debt-paid-amount" value="0" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">تاريخ الاستحقاق</label>
+          <input type="date" id="debt-due-date" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-bold dark:text-white outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-sm shadow-md transition mt-2">حفظ الالتزام</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Repay Debt Partial/Full Modal -->
+  <div id="modal-repay-debt" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-900 dark:text-white">تسديد دفعة / قسط</h3>
+        <button onclick="closeRepayDebtModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" id="repay-close-icon"></button>
+      </div>
+
+      <form id="repay-form" onsubmit="handleRepaySubmit(event)" class="space-y-3">
+        <input type="hidden" id="repay-debt-id">
+
+        <div class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs space-y-1">
+          <p class="text-slate-500">جهة الدين: <strong id="repay-person-text" class="text-slate-900 dark:text-white">--</strong></p>
+          <p class="text-slate-500">المتبقي للتسديد: <strong id="repay-remaining-text" class="text-brand-600 dark:text-brand-400">0.00</strong></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">مبلغ الدفعة المسددة</label>
+          <input type="number" step="0.01" id="repay-amount" required placeholder="0.00" class="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none text-xl font-extrabold text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="repay-log-tx" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+          <label for="repay-log-tx" class="text-xs font-medium text-slate-700 dark:text-slate-300">تسجيل العملية تلقائياً في المعاملات المالية (الدخل/المصاريف)</label>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-sm shadow-md transition mt-2">تأكيد التسديد</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: PIN Set/Update Dialog Modal -->
+  <div id="modal-set-pin" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 text-center">
+      <h3 class="font-bold text-base text-slate-900 dark:text-white">تعيين رمز الحماية PIN</h3>
+      <p class="text-xs text-slate-500">أدخل رمزاً مكوناً من 4 أرقام لحماية محفظتك</p>
+
+      <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="set-pin-input" placeholder="****" class="w-36 mx-auto text-center tracking-[1em] text-2xl font-black py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none outline-none focus:ring-2 focus:ring-brand-500">
+
+      <div class="flex items-center gap-2 pt-2">
+        <button onclick="savePinCode()" class="flex-1 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs shadow-md transition">حفظ الرمز</button>
+        <button onclick="disablePinCode()" class="flex-1 py-3 rounded-2xl bg-slate-200 dark:bg-slate-800 text-rose-500 font-bold text-xs hover:bg-slate-300 transition">إلغاء PIN</button>
+      </div>
+      <button onclick="closeSetPinModal()" class="text-xs text-slate-400 underline">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- MODAL 6: Reset Confirmation Modal -->
+  <div id="modal-reset-confirm" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto" id="reset-alert-icon"></div>
+      <h3 class="font-bold text-base text-slate-900 dark:text-white">تأكيد مسح البيانات</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">هل أنت أسطول من التأكيد؟ سيتم حذف جميع المعاملات والديون والإعدادات نهائياً من المتصفح ولن يمكنك استرجاعها.</p>
+
+      <div class="flex items-center gap-2 pt-2">
+        <button onclick="confirmFactoryReset()" class="flex-1 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs shadow-md transition">نعم، مسح الكل</button>
+        <button onclick="closeResetModal()" class="flex-1 py-3 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-300 transition">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    /* ==========================================================================
+       1. SVG ICON SYSTEM (Pure Inline Vectors for Offline Support)
+       ========================================================================== */
+    const SVG_ICONS = {
+      wallet: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+      income: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>`,
+      expense: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>`,
+      home: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`,
+      history: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      debts: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+      analytics: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>`,
+      settings: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
+      plus: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>`,
+      food: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`,
+      transport: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m-8 4h8m-5 4h2M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>`,
+      bills: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
+      housing: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`,
+      shopping: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>`,
+      health: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+      entertainment: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      salary: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      profit: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>`,
+      search: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>`,
+      delete: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+      export: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`,
+      import: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>`,
+      lock: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`,
+      unlock: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>`,
+      shield: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
+      moon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`,
+      sun: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`,
+      pie: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>`,
+      x: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+      info: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      backspace: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414-6.414A2 2 0 0110.828 5H19a2 2 0 012 2v10a2 2 0 01-2 2h-8.172a2 2 0 01-1.414-.586L3 12z"/></svg>`
+    };
+
+    function getIcon(name) {
+      return SVG_ICONS[name] || '';
+    }
+
+    /* Inject Icons into static HTML elements */
+    function injectStaticIcons() {
+      const iconMappings = {
+        'app-logo-icon': 'wallet',
+        'lock-icon-container': 'lock',
+        'header-lock-btn': 'lock',
+        'header-theme-btn': 'moon',
+        'hero-wallet-icon': 'wallet',
+        'hero-income-icon': 'income',
+        'hero-expense-icon': 'expense',
+        'card-budget-icon': 'wallet',
+        'card-debts-icon': 'debts',
+        'search-input-icon': 'search',
+        'export-csv-icon': 'export',
+        'add-debt-btn-icon': 'plus',
+        'analytics-bar-icon': 'analytics',
+        'analytics-pie-icon': 'pie',
+        'analytics-info-icon': 'info',
+        'setting-shield-icon': 'shield',
+        'backup-export-icon': 'export',
+        'backup-import-icon': 'import',
+        'factory-reset-icon': 'delete',
+        'reset-alert-icon': 'delete',
+        'nav-icon-home': 'home',
+        'nav-icon-history': 'history',
+        'fab-plus-icon': 'plus',
+        'nav-icon-debts': 'debts',
+        'nav-icon-analytics': 'analytics',
+        'nav-icon-settings': 'settings',
+        'quick-close-icon': 'x',
+        'quick-expense-icon': 'expense',
+        'quick-income-icon': 'income',
+        'quick-debt-icon': 'debts',
+        'quick-installment-icon': 'wallet',
+        'tx-close-icon': 'x',
+        'debt-close-icon': 'x',
+        'repay-close-icon': 'x',
+        'pin-backspace-btn': 'backspace'
+      };
+
+      for (let id in iconMappings) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = getIcon(iconMappings[id]);
+      }
+    }
+
+
+    /* ==========================================================================
+       2. CATEGORIES CONFIGURATION
+       ========================================================================== */
+    const CATEGORIES = [
+      { id: 'food', name: 'أكل وشرب', icon: 'food', bg: 'bg-orange-500/10 dark:bg-orange-500/20', text: 'text-orange-500' },
+      { id: 'transport', name: 'مواصلات', icon: 'transport', bg: 'bg-blue-500/10 dark:bg-blue-500/20', text: 'text-blue-500' },
+      { id: 'bills', name: 'فواتير', icon: 'bills', bg: 'bg-yellow-500/10 dark:bg-yellow-500/20', text: 'text-yellow-500' },
+      { id: 'housing', name: 'سكن وإيجار', icon: 'housing', bg: 'bg-purple-500/10 dark:bg-purple-500/20', text: 'text-purple-500' },
+      { id: 'shopping', name: 'تسوق', icon: 'shopping', bg: 'bg-pink-500/10 dark:bg-pink-500/20', text: 'text-pink-500' },
+      { id: 'health', name: 'صحة وعلاج', icon: 'health', bg: 'bg-red-500/10 dark:bg-red-500/20', text: 'text-red-500' },
+      { id: 'entertainment', name: 'ترفيه', icon: 'entertainment', bg: 'bg-teal-500/10 dark:bg-teal-500/20', text: 'text-teal-500' },
+      { id: 'installments', name: 'أقساط', icon: 'debts', bg: 'bg-indigo-500/10 dark:bg-indigo-500/20', text: 'text-indigo-500' },
+      { id: 'salary', name: 'رواتب', icon: 'salary', bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-500' },
+      { id: 'profit', name: 'أرباح واستثمار', icon: 'profit', bg: 'bg-cyan-500/10 dark:bg-cyan-500/20', text: 'text-cyan-500' },
+    ];
+
+
+    /* ==========================================================================
+       3. STORAGE & INDEXEDDB ENGINE (Offline-First)
+       ========================================================================== */
+    const DB_NAME = 'SofaFinanceDB';
+    const DB_VERSION = 1;
+    let db = null;
+
+    // Default Application State
+    let appState = {
+      transactions: [],
+      debts: [],
+      settings: {
+        currency: 'ر.س',
+        monthlyBudget: 3000,
+        initialBalance: 0,
+        pin: '',
+        darkMode: true
+      },
+      currentTab: 'home',
+      currentDebtSubTab: 'to_me',
+      historyFilter: 'all',
+      enteredPin: '',
+      isLocked: false
+    };
+
+    function initIndexedDB() {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) {
+          console.warn('IndexedDB not available, using LocalStorage fallback');
+          loadFromLocalStorage();
+          resolve();
+          return;
+        }
+
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = (e) => {
+          const dbInstance = e.target.result;
+          if (!dbInstance.objectStoreNames.contains('transactions')) {
+            dbInstance.createObjectStore('transactions', { keyPath: 'id' });
+          }
+          if (!dbInstance.objectStoreNames.contains('debts')) {
+            dbInstance.createObjectStore('debts', { keyPath: 'id' });
+          }
+          if (!dbInstance.objectStoreNames.contains('settings')) {
+            dbInstance.createObjectStore('settings', { keyPath: 'key' });
+          }
         };
-        reader.readAsText(e.target.files[0]);
-    },
-    async factoryReset() {
-        if(confirm('تحذير: هذا الإجراء سيحذف كافة بياناتك المالية نهائياً.') && confirm('تأكيد نهائي؟')) {
-            indexedDB.deleteDatabase(DB_NAME); location.reload();
-        }
+
+        request.onsuccess = (e) => {
+          db = e.target.result;
+          loadAllDataFromDB().then(resolve);
+        };
+
+        request.onerror = () => {
+          loadFromLocalStorage();
+          resolve();
+        };
+      });
     }
-};
 
-const Utils = {
-    id: () => Date.now().toString(36) + Math.random().toString(36).substr(2),
-    date: () => new Date().toISOString(),
-    formatMoney: (amount) => parseFloat(amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + (App.currency || 'د.ل'),
-    formatDate: (iso) => new Date(iso).toLocaleDateString('ar-LY', {year:'numeric', month:'short', day:'numeric'}),
-    
-    incomeCategories: [
-        {name: 'راتب أساسي', icon: '💼'},
-        {name: 'أرباح وتجارة', icon: '📈'},
-        {name: 'مكافآت وحوافز', icon: '🎁'},
-        {name: 'سداد ديون', icon: '🤝'},
-        {name: 'إيرادات أخرى', icon: '💰'}
-    ],
-    expenseCategories: [
-        {name: 'أكل وشرب', icon: '🍔'},
-        {name: 'مواصلات ووقود', icon: '🚗'},
-        {name: 'فواتير منزلية', icon: '💡'},
-        {name: 'إيجار وسكن', icon: '🏠'},
-        {name: 'تسوق وملابس', icon: '🛍️'},
-        {name: 'صحة وعلاج', icon: '💊'},
-        {name: 'ترفيه وسفر', icon: '✈️'},
-        {name: 'أقساط والتزامات', icon: '💳'},
-        {name: 'مصاريف أخرى', icon: '📦'}
-    ]
-};
-
-const Engine = {
-    async calculate() {
-        const settings = await DB.getAll('settings');
-        const s = settings.reduce((acc, curr) => ({...acc, [curr.id]: curr.value}), {});
-        App.currency = s.currency || 'د.ل';
-        let balance = parseFloat(s.initial_balance || 0);
-        let incomeMonth = 0, expenseMonth = 0;
+    async function loadAllDataFromDB() {
+      try {
+        appState.transactions = await getDBStore('transactions');
+        appState.debts = await getDBStore('debts');
+        const settingsArr = await getDBStore('settings');
         
-        const txs = await DB.getAll('transactions');
-        const now = new Date();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
-
-        txs.forEach(t => {
-            let amt = parseFloat(t.amount);
-            let d = new Date(t.date);
-            let isThisMonth = d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-
-            if(['income', 'debt_received'].includes(t.type)) {
-                balance += amt;
-                if(isThisMonth && t.type === 'income') incomeMonth += amt;
-            } else if(['expense', 'debt_paid', 'installment_paid', 'obligation_paid'].includes(t.type)) {
-                balance -= amt;
-                if(isThisMonth && t.type === 'expense') expenseMonth += amt;
-            }
-        });
-
-        let owedToMe = 0, owedByMe = 0;
-        const debts = await DB.getAll('debts');
-        debts.forEach(d => {
-            let rem = parseFloat(d.total_amount) - parseFloat(d.paid_amount);
-            if(d.type === 'owed_to_me') owedToMe += rem; else owedByMe += rem;
-        });
-
-        return { balance, incomeMonth, expenseMonth, owedToMe, owedByMe, budget: parseFloat(s.monthly_budget || 0) };
-    },
-    
-    async saveTransaction(type, amount, category, note, ref_id = null) {
-        await DB.put('transactions', { id: Utils.id(), type, amount: parseFloat(amount), category, note, date: Utils.date(), ref_id });
-        App.refreshDash();
-    },
-
-    async processDebtPayment(debtId, amount) {
-        const debt = await DB.get('debts', debtId);
-        if(!debt) return;
-        debt.paid_amount = parseFloat(debt.paid_amount) + parseFloat(amount);
-        if(debt.paid_amount >= debt.total_amount) debt.status = 'completed';
-        await DB.put('debts', debt);
-        await this.saveTransaction(debt.type === 'owed_to_me' ? 'debt_received' : 'debt_paid', amount, 'تسوية ديون', `دفعة لـ ${debt.person}`, debt.id);
-    },
-
-    async processInstallmentPayment(instId, amount) {
-        const inst = await DB.get('installments', instId);
-        if(!inst) return;
-        inst.paid_amount = parseFloat(inst.paid_amount) + parseFloat(amount);
-        
-        let nd = new Date(inst.next_date);
-        nd.setMonth(nd.getMonth() + 1);
-        inst.next_date = nd.toISOString();
-
-        if(inst.paid_amount >= inst.total_amount) inst.status = 'completed';
-        await DB.put('installments', inst);
-        await this.saveTransaction('installment_paid', amount, 'أقساط شهرية', `سداد قسط: ${inst.name}`, inst.id);
-    },
-
-    async processObligationPayment(obId) {
-        const ob = await DB.get('obligations', obId);
-        if(!ob) return;
-
-        let nd = new Date(ob.due_date);
-        nd.setMonth(nd.getMonth() + 1);
-        ob.due_date = nd.toISOString();
-        await DB.put('obligations', ob);
-        await this.saveTransaction('obligation_paid', ob.amount, 'التزامات شهرية', `سداد التزام: ${ob.name}`, ob.id);
-    }
-};
-
-const AdvancedRecords = {
-    currentTimeFilter: 'all',
-    currentTypeFilter: 'all',
-
-    setTimeFilter(filter, el) {
-        this.currentTimeFilter = filter;
-        document.querySelectorAll('#rec-time-filter .segment').forEach(s => s.classList.remove('active'));
-        el.classList.add('active');
-        this.filterData();
-    },
-
-    setTypeFilter(filter, el) {
-        this.currentTypeFilter = filter;
-        document.querySelectorAll('#rec-type-filter .segment').forEach(s => s.classList.remove('active'));
-        el.classList.add('active');
-        this.filterData();
-    },
-
-    async filterData() {
-        const txs = await DB.getAll('transactions');
-        const searchTerm = document.getElementById('rec-search-input').value.toLowerCase().trim();
-        const now = new Date();
-        now.setHours(0,0,0,0);
-
-        let filtered = txs.filter(t => {
-            let matchSearch = !searchTerm || 
-                (t.category && t.category.toLowerCase().includes(searchTerm)) || 
-                (t.note && t.note.toLowerCase().includes(searchTerm)) ||
-                (t.amount && t.amount.toString().includes(searchTerm));
-            if(!matchSearch) return false;
-
-            let isPos = ['income', 'debt_received'].includes(t.type);
-            if(this.currentTypeFilter === 'income' && !isPos) return false;
-            if(this.currentTypeFilter === 'expense' && isPos) return false;
-
-            let d = new Date(t.date);
-            d.setHours(0,0,0,0);
-            if(this.currentTimeFilter === 'today') {
-                if(d.getTime() !== now.getTime()) return false;
-            } else if(this.currentTimeFilter === 'week') {
-                let diffDays = (now - d) / (1000 * 60 * 60 * 24);
-                if(diffDays < 0 || diffDays > 7) return false;
-            } else if(this.currentTimeFilter === 'month') {
-                if(d.getMonth() !== now.getMonth() || d.getFullYear() !== now.getFullYear()) return false;
-            }
-
-            return true;
-        });
-
-        filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-        let statIncome = 0;
-        let statExpense = 0;
-        let html = '';
-
-        filtered.forEach(t => {
-            let isPos = ['income', 'debt_received'].includes(t.type);
-            let amt = parseFloat(t.amount);
-            if(isPos) statIncome += amt; else statExpense += amt;
-
-            let icon = isPos ? '↓' : '↑';
-            let allCats = [...Utils.incomeCategories, ...Utils.expenseCategories];
-            let foundCat = allCats.find(c => c.name === t.category);
-            if(foundCat) icon = foundCat.icon;
-
-            html += `<div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon">${icon}</div>
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <b style="font-size: 15px;">${t.category}</b>
-                        <span class="text-sm">${Utils.formatDate(t.date)}${t.note ? ' - '+t.note : ''}</span>
-                    </div>
-                </div>
-                <div style="text-align:left; display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
-                    <b class="${isPos ? 'text-success' : 'text-danger'}" style="font-size: 15px;">${isPos ? '+' : '-'}${Utils.formatMoney(t.amount)}</b>
-                    <span class="text-danger text-sm" style="cursor:pointer; font-weight: 600;" onclick="AdvancedRecords.deleteTx('${t.id}')">حذف</span>
-                </div>
-            </div>`;
-        });
-
-        document.getElementById('rec-stat-income').innerText = Utils.formatMoney(statIncome);
-        document.getElementById('rec-stat-expense').innerText = Utils.formatMoney(statExpense);
-        let net = statIncome - statExpense;
-        let netEl = document.getElementById('rec-stat-net');
-        netEl.innerText = Utils.formatMoney(net);
-        netEl.className = net >= 0 ? 'text-success' : 'text-danger';
-        document.getElementById('rec-stat-count').innerText = `${filtered.length} عمليات`;
-
-        document.getElementById('records-list').innerHTML = html || '<p style="text-align:center; padding:25px;" class="text-sm">لا توجد سجلات مالية مطابقة للبحث أو الفلترة المحددة.</p>';
-    },
-
-    async deleteTx(id) {
-        if(confirm('هل تريد حذف هذه العملية وتعديل الرصيد تلقائياً؟')) {
-            await DB.del('transactions', id);
-            App.refreshDash();
-            this.filterData();
+        if (settingsArr && settingsArr.length > 0) {
+          settingsArr.forEach(item => {
+            appState.settings[item.key] = item.value;
+          });
         }
-    },
-
-    async exportCSV() {
-        const txs = await DB.getAll('transactions');
-        if(!txs.length) return alert('لا توجد سجلات للتصدير.');
-        let csv = '\uFEFFالتاريخ,النوع,الفئة,المبلغ,الملاحظات\n';
-        txs.forEach(t => {
-            csv += `"${Utils.formatDate(t.date)}","${t.type}","${t.category}","${t.amount}","${t.note || ''}"\n`;
-        });
-        const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `mahfathaty_report_${Date.now()}.csv`;
-        a.click();
+      } catch (err) {
+        loadFromLocalStorage();
+      }
     }
-};
 
-const Forms = {
-    overlay: document.getElementById('modal-overlay'),
-    sheet: document.getElementById('bottom-sheet'),
-    title: document.getElementById('modal-title'),
-    body: document.getElementById('modal-body'),
-    selectedCategory: '',
+    function getDBStore(storeName) {
+      return new Promise((resolve) => {
+        if (!db) return resolve([]);
+        const tx = db.transaction(storeName, 'readonly');
+        const store = tx.objectStore(storeName);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => resolve([]);
+      });
+    }
 
-    openModal(title, html) {
-        this.title.innerText = title;
-        this.body.innerHTML = html;
-        this.overlay.classList.add('show');
-        setTimeout(() => this.sheet.classList.add('show'), 15);
-    },
-    closeModal() {
-        this.sheet.classList.remove('show');
-        setTimeout(() => this.overlay.classList.remove('show'), 300);
-    },
+    function saveDBItem(storeName, item) {
+      if (db) {
+        const tx = db.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).put(item);
+      }
+      saveToLocalStorage();
+    }
 
-    showAddActionSheet() {
-        const actions = [
-            {l: 'إضافة مصروف جديد', c: 'text-danger', desc: 'تسجيل المصاريف النقدية وتصنيفها', onclick: "Forms.showTransaction('expense')"},
-            {l: 'إضافة دخل جديد', c: 'text-success', desc: 'تسجيل الرواتب والإيرادات المالية', onclick: "Forms.showTransaction('income')"},
-            {l: 'إضافة دين لك (ذمم مرجوة)', c: 'text-primary', desc: 'متابعة الأموال المديونة لدى الآخرين', onclick: "Forms.showDebt('owed_to_me')"},
-            {l: 'إضافة دين عليك (التزامات ذمم)', c: 'text-warning', desc: 'متابعة المبالغ الواجب سدادها للغير', onclick: "Forms.showDebt('owed_by_me')"},
-            {l: 'إضافة قسط مالي', c: '', desc: 'جدولة أقساط القروض والسيارات والمشتريات', onclick: "Forms.showInstallment()"},
-            {l: 'إضافة التزام شهري متكرر', c: '', desc: 'إدارة الإيجارات والفواتير والاشتراكات', onclick: "Forms.showObligation()"}
-        ];
-        let html = '<div class="flex-col" style="gap:10px;">';
-        actions.forEach(a => {
-            html += `<div class="card" style="margin:0; padding:14px; cursor:pointer; border:1px solid var(--border);" onclick="${a.onclick}">
-                <div class="flex-between">
-                    <b class="${a.c}" style="font-size:15px;">${a.l}</b>
-                    <span class="text-sm" style="font-weight: 700;">➔</span>
-                </div>
-                <p class="text-sm" style="margin-top:4px;">${a.desc}</p>
-            </div>`;
-        });
-        html += '</div>';
-        this.openModal('قائمة العمليات السريعة', html);
-    },
+    function deleteDBItem(storeName, id) {
+      if (db) {
+        const tx = db.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).delete(id);
+      }
+      saveToLocalStorage();
+    }
 
-    showTransaction(type) {
-        const title = type === 'expense' ? 'تسجيل مصروف جديد' : 'تسجيل دخل جديد';
-        const catsList = type === 'expense' ? Utils.expenseCategories : Utils.incomeCategories;
-        this.selectedCategory = catsList[0].name;
+    function saveSetting(key, value) {
+      appState.settings[key] = value;
+      if (db) {
+        const tx = db.transaction('settings', 'readwrite');
+        tx.objectStore('settings').put({ key, value });
+      }
+      saveToLocalStorage();
+    }
 
-        let tilesHtml = '';
-        catsList.forEach((cat, idx) => {
-            let activeClass = idx === 0 ? 'selected' : '';
-            tilesHtml += `<div class="cat-tile ${activeClass}" id="cat-tile-${idx}" onclick="Forms.selectCategory('${cat.name}', 'cat-tile-${idx}',${catsList.length})">
-                <span class="icon">${cat.icon}</span>
-                <span>${cat.name}</span>
-            </div>`;
-        });
+    function saveToLocalStorage() {
+      localStorage.setItem('sofa_finance_data', JSON.stringify({
+        transactions: appState.transactions,
+        debts: appState.debts,
+        settings: appState.settings
+      }));
+    }
 
-        let html = `
-            <div class="flex-col">
-                <label class="text-sm">المبلغ الإجمالي</label>
-                <input type="number" id="f-amount" placeholder="0.00" inputmode="decimal" style="font-size: 22px; font-weight: bold; text-align: center;">
-                
-                <label class="text-sm">اختر فئة التصنيف:</label>
-                <div class="category-grid" id="cat-grid">
-                    ${tilesHtml}
-                </div>
+    function loadFromLocalStorage() {
+      const data = localStorage.getItem('sofa_finance_data');
+      if (data) {
+        try {
+          const parsed = JSON.parse(data);
+          appState.transactions = parsed.transactions || [];
+          appState.debts = parsed.debts || [];
+          appState.settings = { ...appState.settings, ...(parsed.settings || {}) };
+        } catch(e) {}
+      }
+    }
 
-                <label class="text-sm">ملاحظة توضيحية (اختياري)</label>
-                <input type="text" id="f-note" placeholder="اكتب تفاصيل إضافية...">
-                
-                <button class="btn" onclick="Forms.submitTransaction('${type}')" style="margin-top: 6px;">حفظ العملية المالية</button>
-            </div>
-        `;
-        setTimeout(()=> this.openModal(title, html), 300);
-    },
 
-    selectCategory(catName, elementId, totalCount) {
-        this.selectedCategory = catName;
-        for(let i=0; i<totalCount; i++) {
-            document.getElementById(`cat-tile-${i}`)?.classList.remove('selected');
+    /* ==========================================================================
+       4. INITIALIZATION & UI RENDERING
+       ========================================================================== */
+    window.onload = async function() {
+      injectStaticIcons();
+      await initIndexedDB();
+      
+      // Initialize Category Selector Options
+      const categorySelect = document.getElementById('tx-category');
+      if (categorySelect) {
+        categorySelect.innerHTML = CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      }
+
+      // Populate Category Grid on Home Page
+      renderCategoryGrid();
+
+      // Check PIN lock status
+      if (appState.settings.pin && appState.settings.pin.length === 4) {
+        appState.isLocked = true;
+        document.getElementById('pin-lock-overlay').classList.remove('hidden');
+        document.getElementById('pin-lock-overlay').classList.add('flex');
+      }
+
+      // Check Theme Mode
+      if (appState.settings.darkMode === false) {
+        document.documentElement.classList.remove('dark');
+      }
+
+      // Sync Settings inputs
+      document.getElementById('setting-currency').value = appState.settings.currency || 'ر.س';
+      document.getElementById('setting-budget').value = appState.settings.monthlyBudget || 3000;
+      document.getElementById('setting-initial-balance').value = appState.settings.initialBalance || 0;
+      updatePinStatusText();
+
+      // Initial Refresh
+      refreshAllViews();
+    };
+
+    function refreshAllViews() {
+      renderHomeView();
+      renderHistoryView();
+      renderDebtsView();
+      renderAnalyticsView();
+    }
+
+
+    /* ==========================================================================
+       5. HOME PAGE VIEW RENDERER
+       ========================================================================== */
+    function renderHomeView() {
+      // Calculate Totals
+      const totalIncome = appState.transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+      const totalExpense = appState.transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+      const initialBal = parseFloat(appState.settings.initialBalance || 0);
+      const netLiquidity = initialBal + totalIncome - totalExpense;
+
+      // Update Hero Elements
+      document.getElementById('home-total-balance').textContent = netLiquidity.toLocaleString('ar-SA', { minimumFractionDigits: 2 });
+      document.getElementById('home-currency-symbol').textContent = appState.settings.currency;
+      document.getElementById('home-total-income').textContent = '+' + totalIncome.toLocaleString('ar-SA', { minimumFractionDigits: 2 }) + ' ' + appState.settings.currency;
+      document.getElementById('home-total-expense').textContent = '-' + totalExpense.toLocaleString('ar-SA', { minimumFractionDigits: 2 }) + ' ' + appState.settings.currency;
+
+      // Calculate Monthly Budget Usage
+      const now = new Date();
+      const currentMonthExpenses = appState.transactions.filter(t => {
+        if (t.type !== 'expense') return false;
+        const d = new Date(t.date);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }).reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+      const budgetLimit = parseFloat(appState.settings.monthlyBudget || 3000);
+      const budgetPct = Math.min(Math.round((currentMonthExpenses / (budgetLimit || 1)) * 100), 100);
+
+      document.getElementById('budget-subtitle').textContent = `الحد الأقصى: ${budgetLimit.toLocaleString()} ${appState.settings.currency}`;
+      document.getElementById('budget-percentage').textContent = `${budgetPct}%`;
+      
+      const progressBar = document.getElementById('budget-progress-bar');
+      progressBar.style.width = `${budgetPct}%`;
+      if (budgetPct > 90) {
+        progressBar.className = 'bg-rose-500 h-full rounded-full transition-all duration-500';
+      } else if (budgetPct > 70) {
+        progressBar.className = 'bg-amber-500 h-full rounded-full transition-all duration-500';
+      } else {
+        progressBar.className = 'bg-indigo-500 h-full rounded-full transition-all duration-500';
+      }
+
+      document.getElementById('budget-spent-text').textContent = `${currentMonthExpenses.toLocaleString()} ${appState.settings.currency}`;
+      document.getElementById('budget-remaining-text').textContent = `${Math.max(budgetLimit - currentMonthExpenses, 0).toLocaleString()} ${appState.settings.currency}`;
+
+      // Debts Overview Calculation
+      const debtsToMe = appState.debts.filter(d => d.type === 'to_me').reduce((sum, d) => sum + (parseFloat(d.totalAmount) - parseFloat(d.paidAmount || 0)), 0);
+      const debtsIOwe = appState.debts.filter(d => d.type === 'i_owe' || d.type === 'installments' || d.type === 'recurring').reduce((sum, d) => sum + (parseFloat(d.totalAmount) - parseFloat(d.paidAmount || 0)), 0);
+
+      document.getElementById('home-debts-to-me').textContent = `${debtsToMe.toLocaleString()} ${appState.settings.currency}`;
+      document.getElementById('home-debts-i-owe').textContent = `${debtsIOwe.toLocaleString()} ${appState.settings.currency}`;
+
+      // Render Recent 5 Transactions
+      const recentListContainer = document.getElementById('home-recent-list');
+      const sortedTx = [...appState.transactions].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+      if (sortedTx.length === 0) {
+        recentListContainer.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">لا توجد معاملات مسجلة حتى الآن</div>`;
+      } else {
+        recentListContainer.innerHTML = sortedTx.map(tx => renderTransactionCardHTML(tx)).join('');
+      }
+    }
+
+    function renderCategoryGrid() {
+      const container = document.getElementById('categories-grid-container');
+      if (!container) return;
+
+      container.innerHTML = CATEGORIES.map(cat => `
+        <button onclick="quickAddCategoryExpense('${cat.id}')" class="flex flex-col items-center gap-1.5 p-2 rounded-2xl ${cat.bg} hover:scale-105 transition active:scale-95 text-center">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center ${cat.text}">
+            ${getIcon(cat.icon)}
+          </div>
+          <span class="text-[10px] font-bold text-slate-700 dark:text-slate-200 line-clamp-1">${cat.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function quickAddCategoryExpense(catId) {
+      openAddTxModal('expense');
+      document.getElementById('tx-category').value = catId;
+    }
+
+
+    /* ==========================================================================
+       6. HISTORY & TRANSACTIONS MANAGEMENT
+       ========================================================================== */
+    function renderHistoryView() {
+      const fullListContainer = document.getElementById('history-full-list');
+      const query = (document.getElementById('history-search-input').value || '').toLowerCase();
+      const filter = appState.historyFilter;
+      const now = new Date();
+
+      let filtered = appState.transactions.filter(t => {
+        // Search filter
+        const matchSearch = (t.note || '').toLowerCase().includes(query) || (CATEGORIES.find(c => c.id === t.category)?.name || '').includes(query);
+        if (!matchSearch) return false;
+
+        // Date / Type filters
+        const tDate = new Date(t.date);
+        if (filter === 'today') {
+          return tDate.toDateString() === now.toDateString();
+        } else if (filter === 'week') {
+          const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+          return tDate >= sevenDaysAgo;
+        } else if (filter === 'month') {
+          return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+        } else if (filter === 'income') {
+          return t.type === 'income';
+        } else if (filter === 'expense') {
+          return t.type === 'expense';
         }
-        document.getElementById(elementId)?.classList.add('selected');
-    },
 
-    async submitTransaction(type) {
-        let amt = document.getElementById('f-amount').value;
-        let note = document.getElementById('f-note').value;
-        let cat = this.selectedCategory;
-        if(!amt || amt <= 0) return alert('الرجاء إدخال مبلغ صحيح.');
-        await Engine.saveTransaction(type, amt, cat, note);
-        this.closeModal();
-    },
+        return true;
+      });
 
-    showDebt(type) {
-        let title = type === 'owed_to_me' ? 'تسجيل دين لك عند شخص' : 'تسجيل دين عليك لشخص';
-        let html = `
-            <div class="flex-col">
-                <label class="text-sm">اسم الطرف الآخر</label>
-                <input type="text" id="f-person" placeholder="اسم الشخص أو الجهة">
-                
-                <label class="text-sm">إجمالي مبلغ الدين</label>
-                <input type="number" id="f-amount" placeholder="0.00" inputmode="decimal">
-                
-                <label class="text-sm">تاريخ بدء الدين</label>
-                <input type="date" id="f-date" value="${new Date().toISOString().split('T')[0]}">
-                
-                <button class="btn" onclick="Forms.submitDebt('${type}')" style="margin-top: 6px;">حفظ تفاصيل الدين</button>
-            </div>
-        `;
-        setTimeout(()=> this.openModal(title, html), 300);
-    },
-    async submitDebt(type) {
-        let person = document.getElementById('f-person').value;
-        let amt = document.getElementById('f-amount').value;
-        let date = document.getElementById('f-date').value;
-        if(!person || !amt) return alert('الرجاء تعبئة الحقول المطلوبة.');
-        await DB.put('debts', { id: Utils.id(), type, person, total_amount: parseFloat(amt), paid_amount: 0, start_date: new Date(date).toISOString(), status: 'pending' });
-        App.refreshDash(); this.closeModal();
-    },
+      // Sort newest first
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    showInstallment() {
-        let html = `
-            <div class="flex-col">
-                <label class="text-sm">اسم القسط (مثل: قسط سيارة، قرض بنكي)</label>
-                <input type="text" id="f-name" placeholder="اسم القسط أو التمويل">
-                
-                <label class="text-sm">إجمالي المبلغ الكلي المقسط</label>
-                <input type="number" id="f-total" placeholder="0.00" inputmode="decimal">
-                
-                <label class="text-sm">قيمة القسط الشهري الثابت</label>
-                <input type="number" id="f-inst" placeholder="0.00" inputmode="decimal">
-                
-                <label class="text-sm">تاريخ استحقاق القسط القادم</label>
-                <input type="date" id="f-date" value="${new Date().toISOString().split('T')[0]}">
-                
-                <button class="btn" onclick="Forms.submitInstallment()" style="margin-top: 6px;">حفظ جدولة القسط</button>
-            </div>
-        `;
-        setTimeout(()=> this.openModal('إضافة قسط مالي متقدم', html), 300);
-    },
-    async submitInstallment() {
-        let name = document.getElementById('f-name').value;
-        let total = document.getElementById('f-total').value;
-        let inst = document.getElementById('f-inst').value;
-        let date = document.getElementById('f-date').value;
-        if(!name || !total || !inst) return alert('الرجاء تعبئة كافة الحقول بدقة.');
-        await DB.put('installments', { id: Utils.id(), name, total_amount: parseFloat(total), installment_amount: parseFloat(inst), paid_amount: 0, next_date: new Date(date).toISOString(), status: 'active' });
-        App.refreshDash(); this.closeModal();
-    },
+      // Calculate totals
+      const count = filtered.length;
+      const netTotal = filtered.reduce((sum, t) => sum + (t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)), 0);
 
-    showObligation() {
-        let html = `
-            <div class="flex-col">
-                <label class="text-sm">اسم الالتزام الدوري (مثل: إيجار شقة، اشتراك إنترنت)</label>
-                <input type="text" id="f-name" placeholder="اسم الالتزام">
-                
-                <label class="text-sm">المبلغ المستحق دورياً</label>
-                <input type="number" id="f-amount" placeholder="0.00" inputmode="decimal">
-                
-                <label class="text-sm">تاريخ الاستحقاق القادم</label>
-                <input type="date" id="f-date" value="${new Date().toISOString().split('T')[0]}">
-                
-                <button class="btn" onclick="Forms.submitObligation()" style="margin-top: 6px;">حفظ الالتزام الشهري</button>
-            </div>
-        `;
-        setTimeout(()=> this.openModal('إضافة التزام شهري متكرر', html), 300);
-    },
-    async submitObligation() {
-        let name = document.getElementById('f-name').value;
-        let amt = document.getElementById('f-amount').value;
-        let date = document.getElementById('f-date').value;
-        if(!name || !amt) return alert('الرجاء إدخال تفاصيل الالتزام.');
-        await DB.put('obligations', { id: Utils.id(), name, amount: parseFloat(amt), due_date: new Date(date).toISOString() });
-        App.refreshDash(); this.closeModal();
-    },
+      document.getElementById('filtered-count').textContent = count;
+      document.getElementById('filtered-total').textContent = (netTotal >= 0 ? '+' : '') + netTotal.toLocaleString('ar-SA', { minimumFractionDigits: 2 }) + ' ' + appState.settings.currency;
 
-    showPayment(type, id, maxAmount) {
-        let html = `
-            <div class="flex-col">
-                <p class="text-sm">المبلغ المتبقي أو المستحق: <b>${Utils.formatMoney(maxAmount)}</b></p>
-                <label class="text-sm">مبلغ الدفعة المسددة الان</label>
-                <input type="number" id="f-pay-amt" value="${maxAmount}" inputmode="decimal" style="font-size: 22px; font-weight: bold; text-align: center;">
-                <button class="btn" onclick="Forms.submitPayment('${type}', '${id}')" style="margin-top: 6px;">تأكيد وسداد الدفعة</button>
-            </div>
-        `;
-        this.openModal('تسجيل دفعة سداد مالية', html);
-    },
-    async submitPayment(type, id) {
-        let amt = document.getElementById('f-pay-amt').value;
-        if(!amt || amt <= 0) return alert('الرجاء إدخال مبلغ صحيح.');
-        if(type === 'debt') await Engine.processDebtPayment(id, amt);
-        if(type === 'inst') await Engine.processInstallmentPayment(id, amt);
-        if(type === 'ob') await Engine.processObligationPayment(id);
-        App.refreshDash();
-        let activeTab = document.querySelector('#page-debts .segment.active')?.innerText || '';
-        let targetType = 'owed_to_me';
-        if(activeTab.includes('عليّ')) targetType = 'owed_by_me';
-        else if(activeTab.includes('الأقساط')) targetType = 'installments';
-        else if(activeTab.includes('التزامات')) targetType = 'obligations';
-        App.renderDebts(targetType);
-        this.closeModal();
-    },
-
-    showBudgetSetup() {
-        this.openModal('ضبط الميزانية الشهرية', `<div class="flex-col"><label class="text-sm">الحد الأقصى للمصاريف الشهرية</label><input type="number" id="f-budget" placeholder="0.00" inputmode="decimal"><button class="btn" onclick="Forms.saveSetting('monthly_budget', document.getElementById('f-budget').value)" style="margin-top: 6px;">حفظ الميزانية</button></div>`);
-    },
-    showSettingsUpdate() {
-        this.openModal('تعديل العملة والرصيد', `<div class="flex-col"><label class="text-sm">الرصيد النقدي المبدئي</label><input type="number" id="f-bal" placeholder="0.00"><label class="text-sm">رمز العملة الجديد</label><input type="text" id="f-curr" placeholder="مثال: د.ل"><button class="btn" onclick="Forms.saveSetting('initial_balance', document.getElementById('f-bal').value); Forms.saveSetting('currency', document.getElementById('f-curr').value)" style="margin-top: 6px;">حفظ التعديلات</button></div>`);
-    },
-    async saveSetting(key, val) {
-        if(!val) return;
-        await DB.put('settings', {id: key, value: val});
-        App.refreshDash(); this.closeModal();
+      if (filtered.length === 0) {
+        fullListContainer.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs">لا توجد نتائج تطابق خيارات البحث</div>`;
+      } else {
+        fullListContainer.innerHTML = filtered.map(tx => renderTransactionCardHTML(tx, true)).join('');
+      }
     }
-};
 
-const App = {
-    currency: 'د.ل',
-    pin: null,
-    async init() {
-        await DB.init();
-        const s = await DB.getAll('settings');
-        const setup = s.find(x => x.id === 'initial_balance');
-        const pinObj = s.find(x => x.id === 'app_pin');
-        
-        if(!setup) {
-            document.getElementById('setup-screen').classList.remove('hidden');
-        } else {
-            if(pinObj && pinObj.value) {
-                this.pin = pinObj.value;
-                this.showLock();
+    function setHistoryFilter(filterType) {
+      appState.historyFilter = filterType;
+      ['all', 'today', 'week', 'month', 'income', 'expense'].forEach(f => {
+        const btn = document.getElementById(`filter-chip-${f}`);
+        if (btn) {
+          if (f === filterType) {
+            btn.className = "px-3.5 py-2 rounded-xl font-bold bg-brand-500 text-white shrink-0 shadow-sm transition";
+          } else {
+            btn.className = "px-3.5 py-2 rounded-xl font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0 transition";
+          }
+        }
+      });
+      renderHistoryView();
+    }
+
+    function filterHistory() {
+      renderHistoryView();
+    }
+
+    function renderTransactionCardHTML(tx, showDelete = false) {
+      const cat = CATEGORIES.find(c => c.id === tx.category) || { name: 'عام', icon: 'wallet', bg: 'bg-slate-500/10', text: 'text-slate-500' };
+      const isIncome = tx.type === 'income';
+
+      return `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl ${cat.bg} ${cat.text} flex items-center justify-center shrink-0">
+              ${getIcon(cat.icon)}
+            </div>
+            <div>
+              <p class="font-bold text-xs text-slate-900 dark:text-white">${tx.note || cat.name}</p>
+              <p class="text-[10px] text-slate-400">${tx.date} • ${cat.name}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xs md:text-sm ${isIncome ? 'text-emerald-500' : 'text-rose-500'}">
+              ${isIncome ? '+' : '-'}${parseFloat(tx.amount).toLocaleString('ar-SA', { minimumFractionDigits: 2 })} ${appState.settings.currency}
+            </span>
+            ${showDelete ? `
+              <button onclick="deleteTransaction('${tx.id}')" class="p-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition" title="حذف">
+                ${getIcon('delete')}
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function deleteTransaction(id) {
+      appState.transactions = appState.transactions.filter(t => t.id !== id);
+      deleteDBItem('transactions', id);
+      showToast('تم حذف المعاملة بنجاح');
+      refreshAllViews();
+    }
+
+
+    /* ==========================================================================
+       7. DEBTS & COMMITMENTS MANAGEMENT
+       ========================================================================== */
+    function renderDebtsView() {
+      const container = document.getElementById('debts-items-container');
+      const subtab = appState.currentDebtSubTab;
+
+      const filtered = appState.debts.filter(d => d.type === subtab);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs">لا توجد سجلات تحت هذا التبويب</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(d => {
+        const remaining = parseFloat(d.totalAmount) - parseFloat(d.paidAmount || 0);
+        const isSettled = remaining <= 0;
+        const progressPct = Math.min(Math.round((parseFloat(d.paidAmount || 0) / parseFloat(d.totalAmount)) * 100), 100);
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-sm text-slate-900 dark:text-white">${d.person}</h4>
+                <p class="text-[10px] text-slate-400">تاريخ الاستحقاق: ${d.dueDate || 'غير محدد'}</p>
+              </div>
+              <span class="text-xs font-extrabold px-2.5 py-1 rounded-full ${isSettled ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}">
+                ${isSettled ? 'مكتمل التسديد' : 'قيد التسديد'}
+              </span>
+            </div>
+
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+              <div class="bg-brand-500 h-full transition-all duration-300" style="width: ${progressPct}%"></div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs pt-1">
+              <div>
+                <span class="text-slate-400">الإجمالي: </span>
+                <strong class="text-slate-800 dark:text-slate-200">${parseFloat(d.totalAmount).toLocaleString()} ${appState.settings.currency}</strong>
+              </div>
+              <div>
+                <span class="text-slate-400">المتبقي: </span>
+                <strong class="text-brand-600 dark:text-brand-400">${remaining.toLocaleString()} ${appState.settings.currency}</strong>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+              ${!isSettled ? `
+                <button onclick="openRepayDebtModal('${d.id}')" class="px-3 py-1.5 rounded-xl bg-brand-600 text-white font-bold text-xs hover:bg-brand-700 transition">
+                  تسديد دفعة
+                </button>
+              ` : ''}
+              <button onclick="deleteDebt('${d.id}')" class="p-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition" title="حذف">
+                ${getIcon('delete')}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function switchDebtSubTab(subtab) {
+      appState.currentDebtSubTab = subtab;
+      ['to_me', 'i_owe', 'installments', 'recurring'].forEach(st => {
+        const btn = document.getElementById(`subtab-debts-${st.replace('_', '-')}`);
+        if (btn) {
+          if (st === subtab) {
+            btn.className = "py-2.5 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm transition";
+          } else {
+            btn.className = "py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 transition";
+          }
+        }
+      });
+      renderDebtsView();
+    }
+
+    function deleteDebt(id) {
+      appState.debts = appState.debts.filter(d => d.id !== id);
+      deleteDBItem('debts', id);
+      showToast('تم حذف الالتزام');
+      refreshAllViews();
+    }
+
+
+    /* ==========================================================================
+       8. ANALYTICS & SMART INSIGHTS
+       ========================================================================== */
+    function renderAnalyticsView() {
+      renderWeeklyChart();
+      renderCategoryPieChart();
+      generateSmartInsight();
+    }
+
+    function renderWeeklyChart() {
+      const canvas = document.getElementById('weekly-chart-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      // Handle canvas resolution
+      canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.parentElement.clientHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const width = canvas.parentElement.clientWidth;
+      const height = canvas.parentElement.clientHeight;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Get last 7 days spending
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        days.push(d);
+      }
+
+      const dailyTotals = days.map(d => {
+        return appState.transactions
+          .filter(t => t.type === 'expense' && new Date(t.date).toDateString() === d.toDateString())
+          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      });
+
+      const maxVal = Math.max(...dailyTotals, 100);
+      const barWidth = 24;
+      const gap = (width - 40 - (7 * barWidth)) / 6;
+
+      const isDark = document.documentElement.classList.contains('dark');
+
+      dailyTotals.forEach((val, i) => {
+        const x = 20 + i * (barWidth + gap);
+        const barHeight = (val / maxVal) * (height - 50);
+        const y = height - 30 - barHeight;
+
+        // Draw Bar Gradient
+        const grad = ctx.createLinearGradient(0, y, 0, height - 30);
+        grad.addColorStop(0, '#22c55e');
+        grad.addColorStop(1, '#16a34a');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, Math.max(barHeight, 4), 6);
+        ctx.fill();
+
+        // Day Label
+        const dayName = days[i].toLocaleDateString('ar-SA', { weekday: 'narrow' });
+        ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+        ctx.font = 'bold 11px Cairo';
+        ctx.textAlign = 'center';
+        ctx.fillText(dayName, x + barWidth / 2, height - 10);
+      });
+    }
+
+    function renderCategoryPieChart() {
+      const canvas = document.getElementById('category-chart-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.parentElement.clientHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const width = canvas.parentElement.clientWidth;
+      const height = canvas.parentElement.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      // Calculate Category Breakdown
+      const categorySums = {};
+      appState.transactions.filter(t => t.type === 'expense').forEach(t => {
+        categorySums[t.category] = (categorySums[t.category] || 0) + parseFloat(t.amount);
+      });
+
+      const totalSpent = Object.values(categorySums).reduce((a, b) => a + b, 0);
+      const legendContainer = document.getElementById('category-chart-legend');
+
+      if (totalSpent === 0) {
+        legendContainer.innerHTML = `<p class="text-slate-400">لا توجد مصاريف لتحليلها</p>`;
+        return;
+      }
+
+      const colors = ['#0ea5e9', '#ec4899', '#f59e0b', '#10b981', '#8b5cf6', '#ef4444', '#14b8a6'];
+      let startAngle = 0;
+      let legendHTML = '';
+
+      const keys = Object.keys(categorySums);
+      keys.forEach((catId, index) => {
+        const amt = categorySums[catId];
+        const sliceAngle = (amt / totalSpent) * 2 * Math.PI;
+        const color = colors[index % colors.length];
+
+        // Draw Arc
+        ctx.beginPath();
+        ctx.arc(width / 2, height / 2, Math.min(width, height) / 2.8, startAngle, startAngle + sliceAngle);
+        ctx.lineTo(width / 2, height / 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        startAngle += sliceAngle;
+
+        const catName = CATEGORIES.find(c => c.id === catId)?.name || catId;
+        const pct = Math.round((amt / totalSpent) * 100);
+
+        legendHTML += `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full" style="background-color: ${color}"></span>
+              <span class="text-slate-700 dark:text-slate-300 font-bold">${catName}</span>
+            </div>
+            <span class="text-slate-500 font-extrabold">${pct}% (${amt.toLocaleString()} ${appState.settings.currency})</span>
+          </div>
+        `;
+      });
+
+      // Inner Donut Circle
+      const isDark = document.documentElement.classList.contains('dark');
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, Math.min(width, height) / 4.8, 0, 2 * Math.PI);
+      ctx.fillStyle = isDark ? '#0f172a' : '#ffffff';
+      ctx.fill();
+
+      legendContainer.innerHTML = legendHTML;
+    }
+
+    function generateSmartInsight() {
+      const insightEl = document.getElementById('smart-insight-text');
+      if (!insightEl) return;
+
+      const totalIncome = appState.transactions.filter(t => t.type === 'income').reduce((s, t) => s + parseFloat(t.amount), 0);
+      const totalExpense = appState.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + parseFloat(t.amount), 0);
+      const budget = parseFloat(appState.settings.monthlyBudget || 3000);
+
+      let text = '';
+      if (totalExpense > budget) {
+        text = `⚠️ تكيّف حذر: لقد تجاوزت سقف الميزانية الشهرية المحدد بـ (${budget.toLocaleString()} ${appState.settings.currency}). يُنصح بالحد من المصاريف غير الضرورية.`;
+      } else if (totalExpense > budget * 0.8) {
+        text = `📊 استهلاك مرتفع: أنفقت أكثر من 80% من ميزانيتك الشهرية. حافظ على توازن مصاريف الأيام القادمة.`;
+      } else if (totalIncome > totalExpense) {
+        text = `🎉 أدائك ممتاز! دخلُك يتجاوز مصاريفك بنسبة جيدة. يمكنك توجيه الفائض ونقله إلى الادخار أو سداد الديون.`;
+      } else {
+        text = `💡 حافظ على تدوين كافة العمليات اليومية بانتظام لضمان دقة التقرير المالي.`;
+      }
+
+      insightEl.textContent = text;
+    }
+
+
+    /* ==========================================================================
+       9. FORM SUBMISSIONS & MODALS HANDLERS
+       ========================================================================== */
+    function openQuickActionModal() {
+      document.getElementById('modal-quick-action').classList.remove('hidden');
+      document.getElementById('modal-quick-action').classList.add('flex');
+    }
+
+    function closeQuickActionModal() {
+      document.getElementById('modal-quick-action').classList.add('hidden');
+      document.getElementById('modal-quick-action').classList.remove('flex');
+    }
+
+    function openAddTxModal(type) {
+      document.getElementById('tx-type').value = type;
+      document.getElementById('tx-modal-title').textContent = type === 'income' ? 'إضافة دخل جديد' : 'إضافة مصروف جديد';
+      document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-add-tx').classList.remove('hidden');
+      document.getElementById('modal-add-tx').classList.add('flex');
+    }
+
+    function closeAddTxModal() {
+      document.getElementById('modal-add-tx').classList.add('hidden');
+      document.getElementById('modal-add-tx').classList.remove('flex');
+    }
+
+    function handleTxSubmit(e) {
+      e.preventDefault();
+      const newTx = {
+        id: 'tx_' + Date.now(),
+        type: document.getElementById('tx-type').value,
+        amount: parseFloat(document.getElementById('tx-amount').value),
+        category: document.getElementById('tx-category').value,
+        note: document.getElementById('tx-note').value,
+        date: document.getElementById('tx-date').value
+      };
+
+      appState.transactions.push(newTx);
+      saveDBItem('transactions', newTx);
+
+      closeAddTxModal();
+      document.getElementById('tx-form').reset();
+      showToast('تم حفظ المعاملة بنجاح');
+      refreshAllViews();
+    }
+
+    function openAddDebtModal(defaultType = 'to_me') {
+      document.getElementById('debt-type').value = defaultType;
+      document.getElementById('debt-due-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-add-debt').classList.remove('hidden');
+      document.getElementById('modal-add-debt').classList.add('flex');
+    }
+
+    function closeAddDebtModal() {
+      document.getElementById('modal-add-debt').classList.add('hidden');
+      document.getElementById('modal-add-debt').classList.remove('flex');
+    }
+
+    function handleDebtSubmit(e) {
+      e.preventDefault();
+      const newDebt = {
+        id: 'debt_' + Date.now(),
+        type: document.getElementById('debt-type').value,
+        person: document.getElementById('debt-person').value,
+        totalAmount: parseFloat(document.getElementById('debt-total-amount').value),
+        paidAmount: parseFloat(document.getElementById('debt-paid-amount').value || 0),
+        dueDate: document.getElementById('debt-due-date').value
+      };
+
+      appState.debts.push(newDebt);
+      saveDBItem('debts', newDebt);
+
+      closeAddDebtModal();
+      document.getElementById('debt-form').reset();
+      showToast('تم تسجيل الالتزام بنجاح');
+      refreshAllViews();
+    }
+
+    function openRepayDebtModal(debtId) {
+      const debt = appState.debts.find(d => d.id === debtId);
+      if (!debt) return;
+
+      const remaining = parseFloat(debt.totalAmount) - parseFloat(debt.paidAmount || 0);
+
+      document.getElementById('repay-debt-id').value = debtId;
+      document.getElementById('repay-person-text').textContent = debt.person;
+      document.getElementById('repay-remaining-text').textContent = `${remaining.toLocaleString()} ${appState.settings.currency}`;
+      document.getElementById('repay-amount').value = remaining;
+
+      document.getElementById('modal-repay-debt').classList.remove('hidden');
+      document.getElementById('modal-repay-debt').classList.add('flex');
+    }
+
+    function closeRepayDebtModal() {
+      document.getElementById('modal-repay-debt').classList.add('hidden');
+      document.getElementById('modal-repay-debt').classList.remove('flex');
+    }
+
+    function handleRepaySubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('repay-debt-id').value;
+      const repayAmt = parseFloat(document.getElementById('repay-amount').value);
+      const shouldLogTx = document.getElementById('repay-log-tx').checked;
+
+      const debt = appState.debts.find(d => d.id === id);
+      if (debt) {
+        debt.paidAmount = (parseFloat(debt.paidAmount || 0) + repayAmt);
+        saveDBItem('debts', debt);
+
+        if (shouldLogTx) {
+          const logTx = {
+            id: 'tx_' + Date.now(),
+            type: debt.type === 'to_me' ? 'income' : 'expense',
+            amount: repayAmt,
+            category: 'installments',
+            note: `تسديد دفعة لصالح: ${debt.person}`,
+            date: new Date().toISOString().split('T')[0]
+          };
+          appState.transactions.push(logTx);
+          saveDBItem('transactions', logTx);
+        }
+
+        showToast('تم إدخال الدفعة وتحديث الرصيد');
+      }
+
+      closeRepayDebtModal();
+      refreshAllViews();
+    }
+
+
+    /* ==========================================================================
+       10. SETTINGS, BACKUP & PIN MANAGEMENT
+       ========================================================================== */
+    function saveFinancialSettings() {
+      saveSetting('currency', document.getElementById('setting-currency').value);
+      saveSetting('monthlyBudget', parseFloat(document.getElementById('setting-budget').value || 3000));
+      saveSetting('initialBalance', parseFloat(document.getElementById('setting-initial-balance').value || 0));
+
+      showToast('تم حفظ الإعدادات المالية');
+      refreshAllViews();
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      saveSetting('darkMode', isDark);
+    }
+
+    function openSetPinModal() {
+      document.getElementById('modal-set-pin').classList.remove('hidden');
+      document.getElementById('modal-set-pin').classList.add('flex');
+    }
+
+    function closeSetPinModal() {
+      document.getElementById('modal-set-pin').classList.add('hidden');
+      document.getElementById('modal-set-pin').classList.remove('flex');
+    }
+
+    function savePinCode() {
+      const val = document.getElementById('set-pin-input').value;
+      if (val.length === 4) {
+        saveSetting('pin', val);
+        showToast('تم تفعيل رمز الحماية PIN');
+        updatePinStatusText();
+        closeSetPinModal();
+      } else {
+        showToast('يرجى إدخال 4 أرقام بالضبط');
+      }
+    }
+
+    function disablePinCode() {
+      saveSetting('pin', '');
+      showToast('تم إيقاف رمز الحماية');
+      updatePinStatusText();
+      closeSetPinModal();
+    }
+
+    function updatePinStatusText() {
+      const txt = document.getElementById('pin-status-text');
+      if (txt) {
+        txt.textContent = appState.settings.pin ? 'مفعل (رمز من 4 أرقام)' : 'غير مفعل حالياً';
+      }
+    }
+
+    /* Keypad PIN Lock Screen Logic */
+    function handlePinInput(num) {
+      if (appState.enteredPin.length < 4) {
+        appState.enteredPin += num;
+        updatePinDots();
+
+        if (appState.enteredPin.length === 4) {
+          setTimeout(() => {
+            if (appState.enteredPin === appState.settings.pin) {
+              appState.isLocked = false;
+              document.getElementById('pin-lock-overlay').classList.add('hidden');
+              document.getElementById('pin-lock-overlay').classList.remove('flex');
+              appState.enteredPin = '';
+              updatePinDots();
+              showToast('تم فتح القفل');
             } else {
-                this.start();
+              showToast('رمز PIN غير صحيح');
+              appState.enteredPin = '';
+              updatePinDots();
             }
+          }, 150);
         }
-    },
-    async finishSetup() {
-        let bal = document.getElementById('setup-balance').value || 0;
-        let cur = document.getElementById('setup-currency').value || 'د.ل';
-        await DB.put('settings', {id: 'initial_balance', value: bal});
-        await DB.put('settings', {id: 'currency', value: cur});
-        document.getElementById('setup-screen').classList.add('hidden');
-        this.start();
-    },
-    start() {
-        document.getElementById('lock-screen').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        this.refreshDash();
-    },
-    nav(pageId, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-' + pageId).classList.add('active');
-        if(el) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        }
-        if(pageId === 'records') AdvancedRecords.filterData();
-        if(pageId === 'debts') this.renderDebts('owed_to_me');
-        if(pageId === 'analytics') this.renderAnalytics();
-    },
-    
-    async refreshDash() {
-        const stats = await Engine.calculate();
-        document.getElementById('dash-balance').innerText = Utils.formatMoney(stats.balance);
-        document.getElementById('dash-income').innerText = Utils.formatMoney(stats.incomeMonth);
-        document.getElementById('dash-expense').innerText = Utils.formatMoney(stats.expenseMonth);
-        document.getElementById('dash-owed-to-me').innerText = Utils.formatMoney(stats.owedToMe);
-        document.getElementById('dash-owed-by-me').innerText = Utils.formatMoney(stats.owedByMe);
-        
-        if(stats.budget > 0) {
-            let pct = Math.min(100, Math.round((stats.expenseMonth / stats.budget) * 100));
-            document.getElementById('dash-budget-pct').innerText = pct + '%';
-            let bar = document.getElementById('dash-budget-bar');
-            bar.style.width = pct + '%';
-            bar.style.background = pct > 90 ? 'var(--danger)' : (pct > 75 ? 'var(--warning)' : 'var(--success)');
+      }
+    }
+
+    function handlePinDelete() {
+      appState.enteredPin = appState.enteredPin.slice(0, -1);
+      updatePinDots();
+    }
+
+    function handlePinClear() {
+      appState.enteredPin = '';
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      const dots = document.querySelectorAll('#pin-dots div');
+      dots.forEach((dot, idx) => {
+        if (idx < appState.enteredPin.length) {
+          dot.className = 'w-4 h-4 rounded-full bg-brand-500 border-2 border-brand-400 transition-all duration-200';
         } else {
-            document.getElementById('dash-budget-card').style.display = 'none';
+          dot.className = 'w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-200';
         }
-
-        const txs = await DB.getAll('transactions');
-        txs.sort((a,b) => new Date(b.date) - new Date(a.date));
-        let html = '';
-        txs.slice(0, 5).forEach(t => {
-            let isPos = ['income', 'debt_received'].includes(t.type);
-            html += `<div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon">${isPos ? '↓' : '↑'}</div>
-                    <div><b style="font-size: 15px;">${t.category}</b><br><span class="text-sm">${t.note || Utils.formatDate(t.date)}</span></div>
-                </div>
-                <b class="${isPos ? 'text-success' : ''}" style="font-size: 15px;">${isPos ? '+' : '-'}${Utils.formatMoney(t.amount)}</b>
-            </div>`;
-        });
-        document.getElementById('dash-recent-txs').innerHTML = html || '<p class="text-sm" style="text-align:center; padding:12px;">لا توجد عمليات مسجلة حتى الآن</p>';
-    },
-
-    async renderDebts(type, el) {
-        if(el) {
-            document.querySelectorAll('#page-debts .segment').forEach(s => s.classList.remove('active'));
-            el.classList.add('active');
-        }
-        let html = '';
-        let totalSum = 0;
-        let titleSummaryText = 'إجمالي المبالغ';
-
-        if(type === 'owed_to_me' || type === 'owed_by_me') {
-            const debts = await DB.getAll('debts');
-            let filtered = debts.filter(d => d.type === type);
-            titleSummaryText = type === 'owed_to_me' ? 'إجمالي الديون لك' : 'إجمالي الديون عليك';
-            
-            filtered.forEach(d => {
-                let rem = parseFloat(d.total_amount) - parseFloat(d.paid_amount);
-                totalSum += rem;
-                html += `<div class="card flex-col">
-                    <div class="flex-between"><b style="font-size: 15px;">الطرف: ${d.person}</b><b class="${rem>0?'text-danger':'text-success'}" style="font-size: 15px;">${Utils.formatMoney(rem)} متبقي</b></div>
-                    <div class="flex-between text-sm"><span>الإجمالي: ${Utils.formatMoney(d.total_amount)}</span><span>المدفوع: ${Utils.formatMoney(d.paid_amount)}</span></div>
-                    ${rem>0 ? `<button class="btn btn-outline" style="padding:12px; margin-top:6px;" onclick="Forms.showPayment('debt', '${d.id}',${rem})">تسجيل دفعة سداد</button>` : '<p class="text-success text-sm" style="text-align:center; font-weight:700;">تم التسوية بنجاح</p>'}
-                </div>`;
-            });
-        } else if(type === 'installments') {
-            const insts = await DB.getAll('installments');
-            titleSummaryText = 'إجمالي الأقساط المتبقية';
-            insts.forEach(i => {
-                let rem = parseFloat(i.total_amount) - parseFloat(i.paid_amount);
-                totalSum += rem;
-                html += `<div class="card flex-col">
-                    <div class="flex-between"><b style="font-size: 15px;">${i.name}</b><b class="${rem>0?'text-warning':'text-success'}" style="font-size: 15px;">${Utils.formatMoney(rem)} متبقي</b></div>
-                    <div class="text-sm">قيمة القسط الشهري: <b>${Utils.formatMoney(i.installment_amount)}</b> | الاستحقاق القادم: ${Utils.formatDate(i.next_date)}</div>
-                    ${rem>0 ? `<button class="btn btn-outline" style="padding:12px; margin-top:6px;" onclick="Forms.showPayment('inst', '${i.id}',${i.installment_amount})">دفع القسط الشهري</button>` : '<p class="text-success text-sm" style="text-align:center; font-weight:700;">تم سداد القسط بالكامل</p>'}
-                </div>`;
-            });
-        } else if (type === 'obligations') {
-            const obs = await DB.getAll('obligations');
-            titleSummaryText = 'إجمالي الالتزامات الدورية الشهرية';
-            obs.forEach(o => {
-                totalSum += parseFloat(o.amount);
-                html += `<div class="card flex-col">
-                    <div class="flex-between"><b style="font-size: 15px;">${o.name}</b><b class="text-primary" style="font-size: 15px;">${Utils.formatMoney(o.amount)}</b></div>
-                    <div class="text-sm">موعد الاستحقاق الشهري القادم: ${Utils.formatDate(o.due_date)}</div>
-                    <button class="btn btn-outline" style="padding:12px; margin-top:6px;" onclick="Forms.showPayment('ob', '${o.id}',${o.amount})">تسديد الالتزام الدوري</button>
-                </div>`;
-            });
-        }
-
-        document.getElementById('debts-summary-title').innerText = titleSummaryText;
-        document.getElementById('debts-summary-amount').innerText = Utils.formatMoney(totalSum);
-        document.getElementById('debts-list').innerHTML = html || '<p style="text-align:center; padding:25px;" class="text-sm">لا توجد بيانات مسجلة في هذا القسم حالياً.</p>';
-    },
-
-    async renderAnalytics() {
-        const txs = await DB.getAll('transactions');
-        let days = Array(7).fill(0);
-        let today = new Date();
-        today.setHours(0,0,0,0);
-        let cats = {};
-        
-        txs.forEach(t => {
-            if(!['expense','installment_paid','obligation_paid'].includes(t.type)) return;
-            let d = new Date(t.date); d.setHours(0,0,0,0);
-            let diff = Math.floor((today - d)/(1000*60*60*24));
-            if(diff >= 0 && diff < 7) days[6-diff] += parseFloat(t.amount);
-            
-            if(d.getMonth() === today.getMonth()) {
-                cats[t.category] = (cats[t.category] || 0) + parseFloat(t.amount);
-            }
-        });
-
-        let max = Math.max(...days, 1);
-        let html = '';
-        days.forEach(v => {
-            let h = Math.max((v / max) * 100, 6);
-            html += `<div class="chart-bar" style="height:${h}%;"></div>`;
-        });
-        document.getElementById('chart-expenses').innerHTML = html;
-
-        let topCat = Object.keys(cats).sort((a,b)=>cats[b]-cats[a])[0] || 'لا يوجد';
-        let avg = (days.reduce((a,b)=>a+b,0) / 7).toFixed(2);
-        document.getElementById('smart-analysis').innerText = `متوسط إنفاقك اليومي خلال آخر 7 أيام بلغ ${avg} ${this.currency}. وتعتبر فئة "${topCat}" هي الأكثر استحواذاً على مصاريفك هذا الشهر.`;
-    },
-
-    enteredPin: '',
-    setPin() {
-        let p = prompt('أدخل رمز PIN الجديد (4 أرقام على الأقل)، أو اتركه فارغاً لإلغاء الحماية:');
-        if(p && p.length >= 4) { DB.put('settings', {id: 'app_pin', value: p}); alert('تم حفظ رمز الحماية بنجاح.'); }
-        else if (p === "") { DB.del('settings', 'app_pin'); alert('تم إلغاء قفل الحماية.'); }
-    },
-    showLock() {
-        document.getElementById('lock-screen').classList.remove('hidden');
-        document.getElementById('app-container').classList.add('hidden');
-        this.enteredPin = '';
-        this.updatePinDots();
-        let kp = document.getElementById('pin-keypad');
-        kp.innerHTML = '';
-        [1,2,3,4,5,6,7,8,9,'',0,'⌫'].forEach(n => {
-            if(n === '') kp.innerHTML += `<div></div>`;
-            else kp.innerHTML += `<div class="key-btn" onclick="App.pinPress('${n}')">${n}</div>`;
-        });
-    },
-    pinPress(k) {
-        if(k === '⌫') this.enteredPin = this.enteredPin.slice(0, -1);
-        else if(this.enteredPin.length < 4) this.enteredPin += k;
-        this.updatePinDots();
-        if(this.enteredPin.length === 4) {
-            setTimeout(() => {
-                if(this.enteredPin === this.pin) this.start();
-                else { alert('رمز الحماية غير صحيح'); this.enteredPin = ''; this.updatePinDots(); }
-            }, 120);
-        }
-    },
-    updatePinDots() {
-        let dots = document.querySelectorAll('.pin-dot');
-        dots.forEach((d, i) => d.className = 'pin-dot ' + (i < this.enteredPin.length ? 'filled' : ''));
+      });
     }
-};
 
-document.addEventListener('visibilitychange', () => {
-    if(document.visibilityState === 'hidden' && App.pin) {
-        App.showLock();
+    function toggleLockScreen() {
+      if (!appState.settings.pin) {
+        showToast('يرجى تعيين رمز PIN من الإعدادات أولاً');
+        switchTab('settings');
+        return;
+      }
+      appState.isLocked = true;
+      document.getElementById('pin-lock-overlay').classList.remove('hidden');
+      document.getElementById('pin-lock-overlay').classList.add('flex');
     }
-});
 
-window.onload = () => App.init();
-</script>
+    /* Backup & Factory Reset */
+    function exportBackupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `sofa_finance_backup_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('تم تصدير النسخة الاحتياطية');
+    }
+
+    function importBackupJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (parsed.transactions && parsed.debts) {
+            appState.transactions = parsed.transactions;
+            appState.debts = parsed.debts;
+            appState.settings = { ...appState.settings, ...(parsed.settings || {}) };
+
+            saveToLocalStorage();
+            showToast('تمت استعادة البيانات بنجاح');
+            refreshAllViews();
+          } else {
+            showToast('ملف النسخة الاحتياطية غير صالح');
+          }
+        } catch (err) {
+          showToast('حدث خطأ أثناء قراءة الملف');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function openResetModal() {
+      document.getElementById('modal-reset-confirm').classList.remove('hidden');
+      document.getElementById('modal-reset-confirm').classList.add('flex');
+    }
+
+    function closeResetModal() {
+      document.getElementById('modal-reset-confirm').classList.add('hidden');
+      document.getElementById('modal-reset-confirm').classList.remove('flex');
+    }
+
+    function confirmFactoryReset() {
+      localStorage.clear();
+      if (indexedDB) {
+        indexedDB.deleteDatabase(DB_NAME);
+      }
+      appState.transactions = [];
+      appState.debts = [];
+      closeResetModal();
+      showToast('تم إعادة ضبط التطبيق بنجاح');
+      setTimeout(() => location.reload(), 1000);
+    }
+
+    /* CSV Export with UTF-8 BOM for Excel Arabic Support */
+    function exportCSV() {
+      let csvContent = "\uFEFF"; // UTF-8 BOM Header
+      csvContent += "المعرف,التاريخ,النوع,المبلغ,الفئة,الوصف\n";
+
+      appState.transactions.forEach(t => {
+        const catName = CATEGORIES.find(c => c.id === t.category)?.name || t.category;
+        const typeStr = t.type === 'income' ? 'دخل' : 'مصروف';
+        csvContent += `"${t.id}","${t.date}","${typeStr}","${t.amount}","${catName}","${t.note || ''}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `تقرير_محفظتي_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('تم تصدير ملف CSV مع دعم العربية في إكسل');
+    }
+
+
+    /* ==========================================================================
+       11. NAVIGATION & TOAST SYSTEM
+       ========================================================================== */
+    function switchTab(tabId) {
+      appState.currentTab = tabId;
+
+      // Toggle Active Tab Content
+      document.querySelectorAll('.view-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      const activeTab = document.getElementById(`view-${tabId}`);
+      if (activeTab) activeTab.classList.add('active');
+
+      // Update Navigation Buttons Style
+      ['home', 'history', 'debts', 'analytics', 'settings'].forEach(id => {
+        const btn = document.getElementById(`nav-btn-${id}`);
+        if (btn) {
+          if (id === tabId) {
+            btn.className = "flex flex-col items-center gap-1 text-brand-600 dark:text-brand-400 font-bold text-[10px] transition active:scale-90";
+          } else {
+            btn.className = "flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-600 font-medium text-[10px] transition active:scale-90";
+          }
+        }
+      });
+
+      // Refresh Analytics Canvas if switching to analytics
+      if (tabId === 'analytics') {
+        setTimeout(renderAnalyticsView, 100);
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 shadow-2xl backdrop-blur-md text-xs font-bold transition-all duration-300 transform translate-y-[-10px] opacity-0';
+      toast.innerHTML = `<span>${message}</span>`;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-[-10px]');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
